@@ -58,4 +58,27 @@ export class BasePage {
       throw new Error(` the url: ${url} is undefined`)
     }
   }
+
+  public async clearText(locator: (string | Locator)) {
+    const locatorElement = await this.getTypeOfLocator(locator);
+    await locatorElement.clear();
+  }
+
+  public async countElement(locator: (string | Locator)) {
+    const locatorElement = await this.getTypeOfLocator(locator);
+    const locatorCount = await locatorElement.count();
+    return locatorCount;
+  }
+
+  /**
+   * @description get locator innerText or inputValue based on the provided html tag for that element
+   */
+  public async getElementInnerTextOrInputValue(locator: (string | Locator)) {
+    const locatorElement = await this.getTypeOfLocator(locator);
+    if (await locatorElement.evaluate(el => el.tagName === 'input')) {
+      return (await locatorElement.inputValue()).trim();
+    } else {
+      return (await locatorElement.innerText()).trim();
+    }
+  }
 }

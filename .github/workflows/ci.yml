@@ -1,13 +1,14 @@
 name: ci pipeline
 on:
-  push:
-    branches: 
-      - "*"
-  pull_request:
-    branches: [ main, master ]
+  workflow_dispatch:
+#   push:
+#     branches: 
+#       - "*"
+#   pull_request:
+#     branches: [ main, master ]
 env:
   AWS_ACCESS_KEY: ${{  secrets.AWS_ACCESS_KEY }}
-  AWS_SECRET_KEY: ${{  secrets.AWS_SECRET.KEY }}
+  AWS_SECRET_KEY: ${{  secrets.AWS_SECRET_KEY }}
   AWS_REGION: ${{ secrets.AWS_REGION }}
 jobs:
   test:
@@ -42,13 +43,3 @@ jobs:
         name: playwright-report-${{matrix.greps}}-${{ matrix.browsers }}
         path: playwright-report/
         retention-days: 30
-        
-  deploy:
-    needs: test
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-    - name: Deploy to GitHub Pages
-      uses: actions/deploy-pages@v2  
