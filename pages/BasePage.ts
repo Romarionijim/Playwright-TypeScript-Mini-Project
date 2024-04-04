@@ -44,10 +44,10 @@ export class BasePage {
   public async changeCheckBoxState(label: string) {
     const checkBox = this.page.getByLabel(label);
     const isChecked = await checkBox.isChecked();
-    if (isChecked) {
-      await checkBox.uncheck();
-    } else {
+    if (!isChecked) {
       await checkBox.check();
+    } else {
+      await checkBox.uncheck();
     }
   }
 

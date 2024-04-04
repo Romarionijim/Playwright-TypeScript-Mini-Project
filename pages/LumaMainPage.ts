@@ -1,6 +1,7 @@
-import { expect } from "@playwright/test";
-import { MenuBar } from "../helpers/enums/MenuBarEnum";
+import { Locator, expect } from "@playwright/test";
+import { MenuBar } from "../common/navigationEnums/MenuBarEnum";
 import { BasePage } from "./BasePage";
+import { ICartActionsOptionsInterface } from "../helpers/cartOptionalParams/CartOptionalParams";
 
 export class LumaMainPage extends BasePage {
   private searchBoxLocator = '#search';
@@ -33,18 +34,12 @@ export class LumaMainPage extends BasePage {
   }
 
   /**
-   * @description after clicking on the shopping card you have the option perform the following: proceed to checkout, 
+   * @description after clicking on the shopping card you have the option 
+   * to perform the following actions on the shopping car: proceed to checkout, 
    * validate cart items, modify item quantity, remove item from cart.
-   * @param options optional boolean param object that determine the action you want to perform
+   * @param options optional object that determine the action you want to perform
    */
-  public async performActionsOnShoppingCart(options?: {
-    validateItemCartCount?: boolean, clickProceedToCheckout?: boolean,
-    validateItemCartSubtotal?: boolean, modifyItemQuantity?: boolean,
-    clickOnEditPencilIcon?: boolean, removeItemFromCart?: boolean,
-    viewAndEditCart?: boolean, expectedEmptyShoppingCartCaption?: string,
-    cartTotalItems?: number, expectedSubTotalPrice?: string,
-    itemText?: string, itemQuantity?: string
-  }) {
+  public async performActionsOnShoppingCart(options?: ICartActionsOptionsInterface) {
     let shoppingCartItemCount = this.page.locator(this.shoppingCartLocator).locator(this.shoppingCartItemCountLocator);
     let shoppingCartCountInnerText = await shoppingCartItemCount.innerText();
     let parsedShoppingCartCount = Number.parseInt(shoppingCartCountInnerText);
@@ -54,32 +49,63 @@ export class LumaMainPage extends BasePage {
       const shoppingCartEmptyInnerText = await shoppingCartEmptyCaption.innerText();
       expect(shoppingCartEmptyInnerText.trim()).toBe(options?.expectedEmptyShoppingCartCaption);
     } else {
-      if (options?.validateItemCartCount !== undefined) {
-        const cartTotalItemsInnerText = await this.page.locator(this.cartTotalItemsLocator).innerText();
-        expect(cartTotalItemsInnerText.trim()).toBe(options.cartTotalItems);
+      if (options?.validateItemCartCount !== undefined && options.cartTotalItems !== undefined) {
+        await this.validateItemCartCount(options.cartTotalItems)
       } else if (options?.clickProceedToCheckout !== undefined) {
         await this.clickElement(this.proceedToCheckoutButtonLocator);
-      } else if (options?.validateItemCartSubtotal !== undefined) {
-        const cartSubTotalPriceInnerText = await this.page.locator(this.cartSubtotalPrice).innerText()
-        expect(cartSubTotalPriceInnerText.trim()).toBe(options.expectedSubTotalPrice);
-      } else if (options?.modifyItemQuantity !== undefined && options.itemQuantity !== undefined) {
-        const item = this.page.locator(this.cartItemListLocator, { hasText: options.itemText })
-        const itemQuantityInput = item.locator('input');
-        await this.fillText(itemQuantityInput, options.itemQuantity);
-        const updateButton = this.page.locator('button', { hasText: 'Update' })
-        await expect(updateButton).toBeVisible();
-        await this.clickElement(updateButton)
-        const itemQuantityInputValue = await this.getElementInnerTextOrInputValue(itemQuantityInput);
-        expect(itemQuantityInputValue).toBe(options.itemQuantity)
-      } else if (options?.removeItemFromCart !== undefined && options.cartTotalItems !== undefined) {
-        const item = this.page.locator(this.cartItemListLocator, { hasText: options.itemText })
-        const removeItemButton = item.locator(this.trashIconLocator);
-        await this.clickElement(removeItemButton);
-        await this.countShoppingCartItems(options.cartTotalItems)
+      } else if (options?.validateItemCartSubtotal !== undefined && options.expectedSubTotalPrice !== undefined) {
+        await this.validateCartSubTotalPrice(options.expectedSubTotalPrice)
+      } else if (options?.modifyItemQuantity !== undefined && options.itemText !== undefined && options.itemQuantity !== undefined) {
+        await this.modifyCartItemQuantity(options.itemText, options.itemQuantity);
+        await this.validateCartItemQuantity(options.itemText, options.itemQuantity);
+      } else if (options?.removeItemFromCart !== undefined && options.itemText !== undefined && options.cartTotalItems !== undefined) {
+        await this.removeItemFromCart(options.itemText, options.cartTotalItems)
       } else if (options?.viewAndEditCart !== undefined) {
         await this.clickElement(this.viewAndEditCartLocator);
       }
     }
+  }
+
+  private async validateItemCartCount(cartCount: number) {
+    const cartTotalItemsInnerText = await this.getElementInnerTextOrInputValue(this.cartTotalItemsLocator);
+    expect(cartTotalItemsInnerText).toBe(cartCount);
+  }
+
+  private async validateCartSubTotalPrice(expectedSubTotalPrice: string) {
+    const cartSubTotalPriceInnerText = await this.page.locator(this.cartSubtotalPrice).innerText()
+    expect(cartSubTotalPriceInnerText.trim()).toBe(expectedSubTotalPrice);
+  }
+
+  private async modifyCartItemQuantity(itemText: string, itemQuantity: string) {
+    const itemQuantityInput = await this.getNestedCartItemLocator(itemText, 'input')
+    await this.fillText(itemQuantityInput, itemQuantity);
+    const updateButton = this.page.locator('button', { hasText: 'Update' })
+    await expect(updateButton).toBeVisible();
+    await this.clickElement(updateButton)
+  }
+
+  private async validateCartItemQuantity(itemText: string, itemQuantity: string) {
+    const itemQuantityInput = await this.getNestedCartItemLocator(itemText, 'input')
+    const itemQuantityInputValue = await this.getElementInnerTextOrInputValue(itemQuantityInput);
+    expect(itemQuantityInputValue).toBe(itemQuantity)
+  }
+
+  private async removeItemFromCart(itemText: string, expectedCartCount: number) {
+    const removeItemButton = await this.getNestedCartItemLocator(itemText, this.trashIconLocator)
+    await this.clickElement(removeItemButton);
+    await this.countShoppingCartItems(expectedCartCount)
+  }
+
+  /**
+   * @description get's the nested/child element of the targeted item in the cart 
+   * @param itemText 
+   * @param nestedLocator 
+   * @returns 
+   */
+  private async getNestedCartItemLocator(itemText: string, nestedLocator: (string | Locator)) {
+    const item = this.page.locator(this.cartItemListLocator, { hasText: itemText })
+    const nestedLocatorElement = item.locator(nestedLocator);
+    return nestedLocatorElement;
   }
 
   /**
