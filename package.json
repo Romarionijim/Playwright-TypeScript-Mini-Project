@@ -12,6 +12,7 @@
     "@types/node": "^20.12.2"
   },
   "dependencies": {
+    "@faker-js/faker": "^8.4.1",
     "dotenv": "^16.4.5"
   }
 }

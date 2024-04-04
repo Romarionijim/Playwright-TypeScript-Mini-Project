@@ -71,14 +71,31 @@ export class BasePage {
   }
 
   /**
-   * @description get locator innerText or inputValue based on the provided html tag for that element
+   * @description get element innerText or inputValue based on the provided html tag for that element
    */
-  public async getElementInnerTextOrInputValue(locator: (string | Locator)) {
+  public async getInnerText(locator: (string | Locator)) {
     const locatorElement = await this.getTypeOfLocator(locator);
     if (await locatorElement.evaluate(el => el.tagName === 'input')) {
       return (await locatorElement.inputValue()).trim();
     } else {
       return (await locatorElement.innerText()).trim();
     }
+  }
+
+  public async pressEnter() {
+    await this.page.keyboard.press('Enter');
+  }
+
+  public async getPageUrl() {
+    const pageUrl = this.page.url;
+    return pageUrl;
+  }
+
+  /**
+   * @description clicks on the relevant link (a href element)
+   */
+  public async clickOnLink(linkName: string) {
+    const targetLink = this.page.getByRole('link', { name: linkName });
+    await this.clickElement(targetLink);
   }
 }

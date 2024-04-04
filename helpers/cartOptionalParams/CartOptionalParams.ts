@@ -1,4 +1,4 @@
-export interface PerformActionsOptions {
+export interface CartActionsOptionalParamsInterface {
   validateItemCartCount?: boolean;
   clickProceedToCheckout?: boolean;
   validateItemCartSubtotal?: boolean;
