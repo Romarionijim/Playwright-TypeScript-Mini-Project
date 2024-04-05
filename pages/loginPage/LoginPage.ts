@@ -8,7 +8,6 @@ export class LoginPage extends LumaMainPage {
 
   public async login(email: string = process.env.EMAIL as string, password: string = process.env.PASSWORD as string) {
     const loggedInState = await this.getLoggedInState();
-    try {
       if (loggedInState === 'not-logged-in') {
         console.log('EMAIL:', process.env.EMAIL);
         console.log('PASSWORD:', process.env.PASSWORD);
@@ -17,10 +16,9 @@ export class LoginPage extends LumaMainPage {
         await this.fillText(this.passwordFieldLocator, password);
         const signInButton = this.page.getByRole('button', { name: 'Sign In' });
         await this.clickElement(signInButton);
+      } else {
+        throw new Error(`your attempting to login but the user is already logged in`)
       }
-    } catch (error) {
-      throw new Error('your trying to login but the user is already logged in')
-    }
   }
 
   public async clickCreateAnAccountButton() {

@@ -23,7 +23,6 @@ export class BasePage {
   public async clickElement(locator: (string | Locator)) {
     const locatorElement = await this.getTypeOfLocator(locator);
     await locatorElement.click({ force: true });
-    await locatorElement.scrollIntoViewIfNeeded();
   }
 
   public async fillText(locator: (string | Locator), text: string) {

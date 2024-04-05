@@ -12,3 +12,13 @@ export interface CartActionsOptionalParamsInterface {
   itemText?: string;
   itemQuantity?: string;
 }
+
+export interface ProductItemOptionalParamsInterface {
+  chooseSize?: boolean,
+  itemSize?: string,
+  chooseColor?: boolean,
+  color?: string,
+  validatePrice?: boolean,
+  price?: string,
+  addItemToCart?: boolean,
+}

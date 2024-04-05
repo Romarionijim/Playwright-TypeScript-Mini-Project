@@ -6,4 +6,5 @@ node_modules/
 .idea
 .env
 .DS_STORE
+fixtureTests/
 
