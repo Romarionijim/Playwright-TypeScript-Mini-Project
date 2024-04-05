@@ -20,6 +20,7 @@ export class LumaMainPage extends BasePage {
   private numberOfCartItemsQuantityLocator = '[class="action showcart"] [class="counter qty"]';
   private currentPageTitleLocator = '[data-ui-id="page-title-wrapper"]';
   private clientSideValidationErrorLocator = '[class="mage-error"]';
+  private panelHeaderLocator = '[class="panel header"] [class="header links"]';
 
   public async chooseMenuBarItem(menuBarItem: MenuBar) {
     let menuBarValue = menuBarItem.valueOf();
@@ -145,8 +146,9 @@ export class LumaMainPage extends BasePage {
     expect(itemCount).toBe(expectedCount);
   }
 
-  public async clearInputField() {
-    const inputField = await this.page.locator('input').inputValue();
+  public async clearInputField(inputFieldWrapperLocator: string) {
+    const inputFieldWrapper = this.page.locator(inputFieldWrapperLocator);
+    const inputField = await inputFieldWrapper.locator('input').inputValue();
     if (inputField.length > 0) {
       await this.clearText(inputField);
     } else {
@@ -172,22 +174,66 @@ export class LumaMainPage extends BasePage {
     expect(currentPageTitle).toBe(pageTitle);
   }
 
-  public async countClientSideValidationErrors(expectedCount: number) {
-    const validationErrorsCount = await this.countElement(this.clientSideValidationErrorLocator);
+  public async countClientSideValidationErrors(expectedCount: number, inputFieldsLocator: Locator[], options?: {
+    allfieldsEmpty?: boolean, validationErrorText?: string,
+    emptyFieldsIndexes?: number[], validationErrorsIndexes?: number[]
+  }) {
+    const cliendSideValidationError = this.page.locator(this.clientSideValidationErrorLocator);
+    const validationErrorsCount = await this.countElement(cliendSideValidationError);
     expect(validationErrorsCount).toBe(expectedCount);
+    const inputFields = await this.getInputFieldsValues(inputFieldsLocator);
+    if (options?.allfieldsEmpty !== undefined && inputFields.every(field => field.length === 0)) {
+      const allValidtionErrorsInnerText = await cliendSideValidationError.allInnerTexts();
+      expect(allValidtionErrorsInnerText).toBe(options.validationErrorText);
+    } else {
+      const emptyFieldIndexes: number[] = [];
+      inputFields.forEach((field, index) => {
+        if (field.length === 0) {
+          emptyFieldIndexes.push(index);
+        }
+      });
+      expect(emptyFieldIndexes).toEqual(options?.emptyFieldsIndexes);
+      const validationErrorNthIndex: number[] = []
+      const validationErrorIndexes = await cliendSideValidationError.all();
+      validationErrorIndexes.forEach((validationError, index) => {
+        console.log(`validation error: ${validationError} at index: ${index}`)
+        validationErrorNthIndex.push(index);
+      })
+      expect(validationErrorNthIndex).toEqual(options?.validationErrorsIndexes);
+    }
   }
 
   public async getInputFieldsValues(inputFields: Locator[]) {
     const inputFieldList: string[] = []
     for (let i = 0; i < inputFields.length; i++) {
       const inputField = inputFields[i];
-      if (await inputField.evaluate(el => el.tagName == 'input')) {
-        const inputFieldValue = await inputField.inputValue()
-        inputFieldList.push(inputFieldValue);
-      } else {
-        const inputFieldInnerText = await inputField.innerText();
-        inputFieldList.push(inputFieldInnerText);
+      try {
+        if (await inputField.evaluate(el => el.tagName == 'input')) {
+          const inputFieldValue = await inputField.inputValue()
+          inputFieldList.push(inputFieldValue);
+        } else {
+          const inputFieldInnerText = await inputField.innerText();
+          inputFieldList.push(inputFieldInnerText);
+        }
+      } catch (error) {
+        throw new Error(`none of the conditions in the function "getInputFieldsValues" were satisfied: ${error}`)
       }
     }
+    return inputFieldList;
+  }
+
+  public async clickHomePageLogo() {
+    const homePageLogo = this.page.getByLabel('store logo');
+    await this.clickElement(homePageLogo);
+  }
+
+  /**
+   * @description function that validates if the user is logged in or not based on the logged in class attribute
+   */
+  public async getLoggedInState() {
+    const panelHeader = this.page.locator(this.panelHeaderLocator);
+    const PanelHeaderChildTag = panelHeader.locator('span');
+    const loggedInClassAttribute = await PanelHeaderChildTag.getAttribute('class')
+    return loggedInClassAttribute;
   }
 }

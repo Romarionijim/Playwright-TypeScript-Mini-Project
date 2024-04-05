@@ -9,14 +9,14 @@ export class BasePage {
    * @description get's the type of the locator - if it is a string then convert it to a locator else perform the action directly on that locator
    * @param locator 
    */
-  private async getTypeOfLocator(element: (string | Locator)) {
-    const locatorElement = element as Locator
-    if (typeof element === 'string') {
-      return this.page.locator(element)
-    } else if (element === locatorElement) {
-      return element;
+  private async getTypeOfLocator(locator: (string | Locator)) {
+    const locatorElement = locator as Locator
+    if (typeof locator === 'string') {
+      return this.page.locator(locator)
+    } else if (locator === locatorElement) {
+      return locator;
     } else {
-      throw new Error(`type of locator: ${element} must be a of type string or Locator`)
+      throw new Error(`type of locator: ${locator} must be a of type string or Locator`)
     }
   }
 
@@ -28,8 +28,8 @@ export class BasePage {
 
   public async fillText(locator: (string | Locator), text: string) {
     const locatorElement = await this.getTypeOfLocator(locator);
-    locatorElement.click()
-    locatorElement.fill(text)
+    await locatorElement.click()
+    await locatorElement.fill(text)
   }
 
   public async hover(locator: (string | Locator)) {
@@ -51,7 +51,7 @@ export class BasePage {
     }
   }
 
-  public async goto(url: (string | undefined) = process.env.BASE_URL) {
+  public async loadApp(url: (string | undefined) = process.env.BASE_URL) {
     if (url !== undefined) {
       await this.page.goto(url);
     } else {

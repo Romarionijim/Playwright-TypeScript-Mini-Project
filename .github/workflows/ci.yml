@@ -10,6 +10,8 @@ env:
   AWS_ACCESS_KEY: ${{  secrets.AWS_ACCESS_KEY }}
   AWS_SECRET_KEY: ${{  secrets.AWS_SECRET_KEY }}
   AWS_REGION: ${{ secrets.AWS_REGION }}
+  EMAIL: ${{ secrets.EMAIL }}
+  PASSWORD: ${{ secrets.PASSWORD }}
 jobs:
   test:
     timeout-minutes: 60
@@ -19,7 +21,7 @@ jobs:
       matrix:
         base_urls: ['https://magento.softwaretestingboard.com/']
         browsers: ['chromium', 'firefox']
-        greps: ['@login']
+        greps: ['@LOGIN', '@SIGN_UP']
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
@@ -43,3 +45,8 @@ jobs:
         name: playwright-report-${{matrix.greps}}-${{ matrix.browsers }}
         path: playwright-report/
         retention-days: 30
+    - name: Deploy Playwright report to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: playwright-report/
