@@ -97,4 +97,9 @@ export class BasePage {
     const targetLink = this.page.getByRole('link', { name: linkName });
     await this.clickElement(targetLink);
   }
+
+  public async waitForElementToBeVisible(locator: (string | Locator)) {
+    let locatorType = await this.getTypeOfLocator(locator);
+    await locatorType.waitFor({ state: 'visible', timeout: 5000 });
+  }
 }

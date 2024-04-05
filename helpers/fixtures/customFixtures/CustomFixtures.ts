@@ -12,7 +12,7 @@ type MyFixtures = {
 }
 
 /**
- * @description custom reusable fixture to load app website and login to prevent calling login function before each
+ * @description custom fixtures to promote reusability and prevent repeating same workflows in each test file
  */
 export const test = base.extend<MyFixtures>({
   loadAppAndLogin: async ({ page }, use) => {

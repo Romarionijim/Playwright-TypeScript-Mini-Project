@@ -15,10 +15,17 @@ export interface CartActionsOptionalParamsInterface {
 
 export interface ProductItemOptionalParamsInterface {
   chooseSize?: boolean,
-  itemSize?: string,
+  size?: string,
   chooseColor?: boolean,
   color?: string,
   validatePrice?: boolean,
   price?: string,
   addItemToCart?: boolean,
+}
+
+export interface ClientSideValiationErrorOptionalParamsInterface {
+  allfieldsEmpty?: boolean,
+  validationErrorText?: string,
+  emptyFieldsIndexes?: number[],
+  validationErrorsIndexes?: number[],
 }

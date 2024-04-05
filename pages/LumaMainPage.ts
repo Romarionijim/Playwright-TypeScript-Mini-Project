@@ -1,9 +1,10 @@
-import { Locator, expect } from "@playwright/test";
+import { Locator, Page, expect } from "@playwright/test";
 import { MenuBar } from "../common/navigationEnums/menuBar/MenuBarEnum";
 import { BasePage } from "./BasePage";
-import { CartActionsOptionalParamsInterface } from "../helpers/cartOptionalParams/CartOptionalParams";
+import { CartActionsOptionalParamsInterface, ClientSideValiationErrorOptionalParamsInterface } from "../helpers/optionalParamsInterfaces/OptionalParams";
 import { MenuBarCategories } from "../common/navigationEnums/menuBarCategories/MenuBarCategories";
 import { MenuBarSubCategories } from "../common/navigationEnums/menuBarSubCategories/MenuBarSubCategories";
+import { ItemShoppingComponentPage } from "./pageComponents/productShoppingComponent/ItemShoppingPage";
 
 export class LumaMainPage extends BasePage {
   private searchBoxLocator = '#search';
@@ -21,6 +22,8 @@ export class LumaMainPage extends BasePage {
   private currentPageTitleLocator = '[data-ui-id="page-title-wrapper"]';
   private clientSideValidationErrorLocator = '[class="mage-error"]';
   private panelHeaderLocator = '[class="panel header"] [class="header links"]';
+  private userWelcomeCaptionLocator = '[class="panel wrapper"] [class="greet welcome"]';
+  private createAnAccountButtonName = 'Create an Account';
 
   public async chooseMenuBarItem(menuBarItem: MenuBar) {
     let menuBarValue = menuBarItem.valueOf();
@@ -72,21 +75,31 @@ export class LumaMainPage extends BasePage {
       const shoppingCartEmptyInnerText = await this.getInnerText(shoppingCartEmptyCaption);
       expect(shoppingCartEmptyInnerText).toBe(options?.expectedEmptyShoppingCartCaption);
     } else {
-      if (options?.validateItemCartCount !== undefined && options.cartTotalItems !== undefined) {
-        await this.validateItemCartCount(options.cartTotalItems)
-      } else if (options?.clickProceedToCheckout !== undefined) {
-        await this.clickElement(this.proceedToCheckoutButtonLocator);
-      } else if (options?.validateItemCartSubtotal !== undefined && options.expectedSubTotalPrice !== undefined) {
-        await this.validateCartSubTotalPrice(options.expectedSubTotalPrice)
-      } else if (options?.modifyItemQuantity !== undefined && options.itemText !== undefined && options.itemQuantity !== undefined) {
-        await this.modifyCartItemQuantity(options.itemText, options.itemQuantity);
-        await this.validateCartItemQuantity(options.itemText, options.itemQuantity);
-      } else if (options?.removeItemFromCart !== undefined && options.itemText !== undefined && options.cartTotalItems !== undefined) {
-        await this.removeItemFromCart(options.itemText, options.cartTotalItems)
-      } else if (options?.clickOnEditPencilIcon !== undefined && options.itemText !== undefined) {
-        await this.clickOnCartItemPencilIcon(options.itemText)
-      } else if (options?.viewAndEditCart !== undefined) {
-        await this.clickElement(this.viewAndEditCartLocator);
+      try {
+        if (options?.validateItemCartCount !== undefined && options.cartTotalItems !== undefined) {
+          await this.validateItemCartCount(options.cartTotalItems)
+        }
+        if (options?.clickProceedToCheckout !== undefined) {
+          await this.clickElement(this.proceedToCheckoutButtonLocator);
+        }
+        if (options?.validateItemCartSubtotal !== undefined && options.expectedSubTotalPrice !== undefined) {
+          await this.validateCartSubTotalPrice(options.expectedSubTotalPrice)
+        }
+        if (options?.modifyItemQuantity !== undefined && options.itemText !== undefined && options.itemQuantity !== undefined) {
+          await this.modifyCartItemQuantity(options.itemText, options.itemQuantity);
+          await this.validateCartItemQuantity(options.itemText, options.itemQuantity);
+        }
+        if (options?.removeItemFromCart !== undefined && options.itemText !== undefined && options.cartTotalItems !== undefined) {
+          await this.removeItemFromCart(options.itemText, options.cartTotalItems)
+        }
+        if (options?.clickOnEditPencilIcon !== undefined && options.itemText !== undefined) {
+          await this.clickOnCartItemPencilIcon(options.itemText)
+        }
+        if (options?.viewAndEditCart !== undefined) {
+          await this.clickElement(this.viewAndEditCartLocator);
+        }
+      } catch (error) {
+        throw new Error(`pleasae refer to function "performActionsOnShoppingCart" - the condition may not be satisifed `)
       }
     }
   }
@@ -165,19 +178,12 @@ export class LumaMainPage extends BasePage {
     await this.clickOnLink('Sign In');
   }
 
-  public async clickCreateAnAccount() {
-    await this.clickOnLink('Create an Account');
-  }
-
   public async validateCurrentPageTitle(pageTitle: string) {
     const currentPageTitle = await this.getInnerText(this.currentPageTitleLocator);
     expect(currentPageTitle).toBe(pageTitle);
   }
 
-  public async countClientSideValidationErrors(expectedCount: number, inputFieldsLocator: Locator[], options?: {
-    allfieldsEmpty?: boolean, validationErrorText?: string,
-    emptyFieldsIndexes?: number[], validationErrorsIndexes?: number[]
-  }) {
+  public async countClientSideValidationErrors(expectedCount: number, inputFieldsLocator: Locator[], options?: ClientSideValiationErrorOptionalParamsInterface) {
     const cliendSideValidationError = this.page.locator(this.clientSideValidationErrorLocator);
     const validationErrorsCount = await this.countElement(cliendSideValidationError);
     expect(validationErrorsCount).toBe(expectedCount);
@@ -235,5 +241,19 @@ export class LumaMainPage extends BasePage {
     const PanelHeaderChildTag = panelHeader.locator('span');
     const loggedInClassAttribute = await PanelHeaderChildTag.getAttribute('class')
     return loggedInClassAttribute;
+  }
+
+  public async validateLoggedInUser(user: string) {
+    const loggedInUserWelcomeGreet = this.page.locator(this.userWelcomeCaptionLocator)
+    await this.waitForElementToBeVisible(loggedInUserWelcomeGreet);
+    const loggedInUser = await this.getInnerText(loggedInUserWelcomeGreet);
+    expect(loggedInUser).toBe(`Welcome, ${user}!`)
+  }
+
+  /**
+   * @description clicks on the create account panel bar link
+   */
+  public async clickCreateAccount() {
+    await this.clickOnLink(this.createAnAccountButtonName);
   }
 }

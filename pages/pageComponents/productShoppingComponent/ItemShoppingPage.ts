@@ -1,12 +1,13 @@
 import { Locator, expect } from "@playwright/test";
 import { LumaMainPage } from "../../LumaMainPage";
 import { ProductItemOptionalParamsInterface } from "../../../helpers/optionalParamsInterfaces/OptionalParams";
+import { BasePage } from "../../BasePage";
 
 /**
  * @description this class is a composed common class when shopping for an item such as choosing item size, color, 
  * adding the item to cart and choosing the quantity of the item
  */
-export class ItemShoppingComponentPage extends LumaMainPage {
+export class ItemShoppingComponentPage extends BasePage {
   private productItemLocator = '.product-item';
   private addToCartButtonText = 'Add to Cart';
   private productItemSize = '[class="swatch-attribute size"]';
@@ -22,21 +23,27 @@ export class ItemShoppingComponentPage extends LumaMainPage {
   public async chooseProductItem(productName: string, options?: ProductItemOptionalParamsInterface) {
     const productItem = this.page.locator(this.productItemLocator, { hasText: productName });
     await this.hover(productItem);
-    if (options?.chooseSize && options.size !== undefined) {
-      await this.chooseItemSize(productItem, options.size)
-    } else if (options?.chooseColor && options.color !== undefined) {
-      await this.chooseItemColor(productItem, options.color);
-    } else if (options?.validatePrice && options.price !== undefined) {
-      await this.validateItemPrice(productItem, options.price);
-    } else if (options?.addItemToCart) {
-      await this.addProductItemToCart(productItem);
+    try {
+      if (options?.chooseSize && options.size !== undefined) {
+        await this.chooseItemSize(productItem, options.size)
+      }
+      if (options?.chooseColor && options.color !== undefined) {
+        await this.chooseItemColor(productItem, options.color);
+      }
+      if (options?.validatePrice && options.price !== undefined) {
+        await this.validateItemPrice(productItem, options.price);
+      }
+      if (options?.addItemToCart) {
+        await this.addProductItemToCart(productItem);
+      }
+    } catch (error) {
+      throw new Error(`none of the conditions were satisfied in function "chooseProductItem" `)
     }
   }
 
   private async chooseItemSize(productItemLocator: Locator, size: string) {
-    const productSize = productItemLocator.locator(this.productItemSize);
-    const sizeOption = productSize.getByRole('option', { name: size })
-    await this.clickElement(sizeOption);
+    const productSize = productItemLocator.locator(`${this.productItemSize} [role="option"]`, { hasText: new RegExp(`^\\b${size}\\b$`, 'i') });
+    await this.clickElement(productSize);
   }
 
   private async chooseItemColor(productItemLocator: Locator, color: string) {

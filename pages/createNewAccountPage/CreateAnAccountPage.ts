@@ -8,11 +8,7 @@ export class CreateAnAccountPage extends LumaMainPage {
   private passwordFieldLocator = '[title="Password"]'
   private confirmPasswordLocator = '#password-confirmation';
   private passwordStrengthLocator = '#password-strength-meter-container';
-  private createAnAccountButtonName = 'Create an Account';
-
-  public async clickCreateAnAccount() {
-    await this.clickOnLink(this.createAnAccountButtonName);
-  }
+  private registerConfirmationLocator = '[class="page messages"]';
 
   public async fillFirstName(firstName: string) {
     await this.fillText(this.firstNameFieldLocator, firstName);
@@ -39,13 +35,27 @@ export class CreateAnAccountPage extends LumaMainPage {
     expect(passwordStrength).toBe(expectedPasswordStrength);
   }
 
-  public async createNewCustomerAccount(firstname: string, lastname: string, email: string, passwordStrengh: string, password: string = process.env.PASSWORD as string) {
-    await this.clickCreateAnAccount();
+  public async validateNewUserRegistered(newUserRegisterConfirmation: string) {
+    const userRegisterConfirmation = await this.getInnerText(this.registerConfirmationLocator);
+    expect(userRegisterConfirmation).toBe(newUserRegisterConfirmation);
+
+  }
+
+  public async clickCreateAccountButton() {
+    const createAccountSubmitButton = this.page.getByRole('button', { name: 'Create an Account' })
+    await this.clickElement(createAccountSubmitButton);
+  }
+
+  public async createNewCustomerAccount(firstname: string, lastname: string, email: string, passwordStrengh: string, registerConfirmationText: string, password: string = process.env.PASSWORD as string) {
+    await this.clickCreateAccount();
     await this.fillFirstName(firstname);
     await this.fillLastName(lastname);
     await this.fillEmail(email);
     await this.fillPassword(password);
     await this.confirmPassword(password);
     await this.validatePasswordStrength(passwordStrengh);
+    await this.clickCreateAccountButton();
+    await this.waitForElementToBeVisible(this.registerConfirmationLocator);
+    await this.validateNewUserRegistered(registerConfirmationText);
   }
 }
