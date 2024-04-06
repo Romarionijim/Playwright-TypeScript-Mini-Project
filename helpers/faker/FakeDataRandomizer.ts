@@ -25,4 +25,32 @@ export default class Randomizer {
     public static getRandomNumbers(): number {
         return faker.datatype.number({ min: 1, max: 1000 });
     }
+
+    public static getRandomCompanyName(): string {
+        return faker.company.name();
+    }
+
+    public static getRandomCityName(): string {
+        return faker.location.city();
+    }
+
+    public static getRandomStreetAddress(): string {
+        return faker.location.streetAddress();
+    }
+
+    public static getRandomPostalCode(): string {
+        return faker.location.zipCode();
+    }
+
+    public static getRandomCountry(): string {
+        return faker.location.country();
+    }
+
+    public static getRandomPhoneNumber(): string {
+        return faker.phone.number();
+    }
+
+    public static getRandomState() {
+        return faker.location.state();
+    }
 }

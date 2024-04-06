@@ -27,7 +27,7 @@ export class LumaMainPage extends BasePage {
   private fieldWrapperControlLocator = '.fieldset .control'
   protected pageMessageCaptionLocator = '[class="page messages"]'
 
-  public async chooseMenuBarItem(menuBarItem: MenuBar) {
+  public async chooseMenuBarOption(menuBarItem: MenuBar) {
     let menuBarValue = menuBarItem.valueOf();
     if (menuBarValue === 'Women' || menuBarValue === 'Men' || menuBarValue === 'Training') {
       await this.hover(menuBarValue);
@@ -71,6 +71,7 @@ export class LumaMainPage extends BasePage {
     let shoppingCartItemCount = this.page.locator(this.shoppingCartLocator).locator(this.shoppingCartItemCountLocator);
     let shoppingCartCountInnerText = await this.getInnerText(shoppingCartItemCount);
     let parsedShoppingCartCount = Number.parseInt(shoppingCartCountInnerText);
+    await this.clickElement(this.numberOfCartItemsQuantityLocator)
     if (parsedShoppingCartCount === 0) {
       const shoppingCartEmptyCaption = this.page.locator(this.emptySubTitleLocator)
       await expect(shoppingCartEmptyCaption).toBeVisible();

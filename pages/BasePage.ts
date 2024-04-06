@@ -41,7 +41,7 @@ export class BasePage {
    * @param label 
    */
   public async changeCheckBoxState(label: string) {
-    const checkBox = this.page.getByLabel(label);
+    const checkBox = this.page.locator(label);
     const isChecked = await checkBox.isChecked();
     if (!isChecked) {
       await checkBox.check();
@@ -101,5 +101,27 @@ export class BasePage {
   public async waitForElementToBeVisible(locator: (string | Locator)) {
     let locatorType = await this.getTypeOfLocator(locator);
     await locatorType.waitFor({ state: 'visible', timeout: 5000 });
+  }
+
+  /**
+   * @description applied to select elements
+   */
+  public async selectOption(locator: (string | Locator), options?: { label?: string, value?: string }) {
+    const selectLocator = await this.getTypeOfLocator(locator);
+    if (options?.label !== undefined) {
+      await selectLocator.selectOption({ label: options.label })
+    } else if (options?.value !== undefined) {
+      await selectLocator.selectOption({ value: options.value });
+    } else {
+      throw new Error(`the label or value may not be provided properly - please refer to function "selectOption" `)
+    }
+  }
+
+  /**
+   * @description applies to every button that has the type of submit e.g "<button type=submit></button>""
+   */
+  public async submit() {
+    const submitButton = this.page.getByRole('button', { name: /submit/i });
+    await this.clickElement(submitButton);
   }
 }

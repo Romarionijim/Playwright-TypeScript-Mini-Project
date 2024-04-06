@@ -2,6 +2,9 @@ import { test as base } from '@playwright/test';
 import { LoginPage } from '../../../pages/loginPage/LoginPage';
 import { LumaMainPage } from '../../../pages/LumaMainPage';
 import { CreateAnAccountPage } from '../../../pages/createNewAccountPage/CreateAnAccountPage';
+import { MenCategoryPage } from '../../../pages/men/MenCategoryPage';
+import { CheckoutShippingPage } from '../../../pages/checkoutPage/CheckOutShippingPage';
+import { CheckoutReviewAndPaymentPage } from '../../../pages/checkoutPage/CheckoutReviewAndPaymentPage';
 
 type MyFixtures = {
   loginPage: LoginPage;
@@ -9,6 +12,9 @@ type MyFixtures = {
   lumaMainPage: LumaMainPage;
   createAnAccountPage: CreateAnAccountPage;
   loadApplication: LumaMainPage;
+  menCategoryPage: MenCategoryPage;
+  checkoutShippingPage: CheckoutShippingPage;
+  checkoutPaymentPage: CheckoutReviewAndPaymentPage;
 }
 
 /**
@@ -35,4 +41,13 @@ export const test = base.extend<MyFixtures>({
   createAnAccountPage: async ({ page }, use) => {
     await use(new CreateAnAccountPage(page));
   },
+  menCategoryPage: async ({ page }, use) => {
+    await use(new MenCategoryPage(page));
+  },
+  checkoutShippingPage: async ({ page }, use) => {
+    await use(new CheckoutShippingPage(page))
+  },
+  checkoutPaymentPage: async ({ page }, use) => {
+    await use(new CheckoutReviewAndPaymentPage(page))
+  }
 })
