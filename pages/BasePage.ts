@@ -120,8 +120,8 @@ export class BasePage {
   /**
    * @description applies to every button that has the type of submit e.g "<button type=submit></button>""
    */
-  public async submit() {
-    const submitButton = this.page.getByRole('button', { name: /submit/i });
+  public async clickOnButtonWithRole(buttonName: string) {
+    const submitButton = this.page.getByRole('button', { name: new RegExp(`^\\${buttonName}\\b$`, 'i') });
     await this.clickElement(submitButton);
   }
 }

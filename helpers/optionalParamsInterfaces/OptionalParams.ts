@@ -30,3 +30,7 @@ export interface ClientSideValiationErrorOptionalParamsInterface {
   validationErrorsIndexes?: number[],
   validationErrorTextList?: string[],
 }
+
+export interface ShippingAddressCheckoutOptionalParams {
+  signIn?: boolean, email?: string, password?: string, firstname?: string, lastname?: string
+}

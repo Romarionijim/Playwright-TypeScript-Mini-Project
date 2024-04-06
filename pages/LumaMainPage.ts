@@ -26,10 +26,11 @@ export class LumaMainPage extends BasePage {
   private createAnAccountButtonName = 'Create an Account';
   private fieldWrapperControlLocator = '.fieldset .control'
   protected pageMessageCaptionLocator = '[class="page messages"]'
+  private navigationMenuBar = '.navigation a';
 
   public async chooseMenuBarOption(menuBarItem: MenuBar) {
-    let menuBarValue = menuBarItem.valueOf();
-    if (menuBarValue === 'Women' || menuBarValue === 'Men' || menuBarValue === 'Training') {
+    let menuBarValue = this.page.locator(this.navigationMenuBar, { hasText: new RegExp(`^\\${menuBarItem.valueOf()}\\b$`, 'i') });
+    if (menuBarItem === 'Women' || menuBarItem === 'Men' || menuBarItem === 'Training') {
       await this.hover(menuBarValue);
     } else {
       await this.clickElement(menuBarValue);
@@ -37,7 +38,7 @@ export class LumaMainPage extends BasePage {
   }
 
   public async chooseMenuCategory(category: MenuBarCategories) {
-    const categoryLink = this.page.getByRole('link', { name: category.valueOf() })
+    const categoryLink = this.page.getByRole('menuitem', { name: category.valueOf() })
     await this.hover(categoryLink);
   }
 
@@ -47,7 +48,7 @@ export class LumaMainPage extends BasePage {
    */
 
   public async chooseMenuSubCategory(subCategory: MenuBarSubCategories) {
-    const categoryLink = this.page.getByRole('link', { name: subCategory.valueOf() })
+    const categoryLink = this.page.getByRole('menuitem', { name: subCategory.valueOf() })
     await this.clickElement(categoryLink);
   }
 
@@ -84,6 +85,7 @@ export class LumaMainPage extends BasePage {
         }
         if (options?.clickProceedToCheckout) {
           await this.clickElement(this.proceedToCheckoutButtonLocator);
+          await this.page.waitForTimeout(2500);
         }
         if (options?.validateItemCartSubtotal && options.expectedSubTotalPrice !== undefined) {
           await this.validateCartSubTotalPrice(options.expectedSubTotalPrice)
@@ -173,7 +175,7 @@ export class LumaMainPage extends BasePage {
   }
 
   public async validateNumberOfItemInCart(expectedNumberOfItems: string) {
-    const cartItemNumbersInnerText = await this.getInnerText(this.numberOfCartItemsQuantityLocator);
+    const cartItemNumbersInnerText = await this.getInnerText(this.shoppingCartItemCountLocator);
     expect(cartItemNumbersInnerText).toBe(expectedNumberOfItems);
   }
 

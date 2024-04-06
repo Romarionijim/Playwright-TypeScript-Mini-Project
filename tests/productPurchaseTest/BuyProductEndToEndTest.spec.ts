@@ -24,6 +24,7 @@ test('Purchase product end to end test', { tag: ['@SANITY'] }, async ({ checkout
   let purchaseConfirmation: string = 'Thank you for your purchase!';
 
   await test.step('navigate to men category ', async () => {
+    await menCategoryPage.loadApp();
     await menCategoryPage.chooseMenuBarOption(MenuBar.MEN);
     await menCategoryPage.chooseMenuCategory(MenuBarCategories.MEN_TOPS);
     await menCategoryPage.chooseMenuSubCategory(MenuBarSubCategories.JACKETS);

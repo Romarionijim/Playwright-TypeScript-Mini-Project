@@ -80,7 +80,8 @@ export class CheckoutShippingPage extends LumaMainPage {
     await this.clickElement(signInButton);
     await this.fillText(this.signinEmailAddressLocator, email);
     await this.fillText(this.signinPasswordLocator, password);
-    await this.submit();
+    const lastButon = this.page.locator('button', { hasText: 'Sign In' })
+    await this.clickElement(signInButton.nth(1));
   }
 
   public async chooseShippingMethod(tableRowText: string) {
@@ -91,6 +92,6 @@ export class CheckoutShippingPage extends LumaMainPage {
   }
 
   public async clickNext() {
-    await this.submit();
+    await this.clickOnButtonWithRole('Next');
   }
 }

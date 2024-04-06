@@ -35,6 +35,7 @@ export class ItemShoppingComponentPage extends BasePage {
       }
       if (options?.addItemToCart) {
         await this.addProductItemToCart(productItem);
+        await this.page.waitForTimeout(2500)
       }
     } catch (error) {
       throw new Error(`none of the conditions were satisfied in function "chooseProductItem" `)

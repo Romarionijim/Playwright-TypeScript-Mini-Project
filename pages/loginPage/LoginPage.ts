@@ -4,7 +4,6 @@ import { ClientSideValiationErrorOptionalParamsInterface } from "../../helpers/o
 export class LoginPage extends LumaMainPage {
   private emailFieldLocator = '[name="login[username]"]';
   private passwordFieldLocator = '[name="login[password]"]';
-  private signInLink = 'Sign In';
 
   public async login(email: string = process.env.EMAIL as string, password: string = process.env.PASSWORD as string,
     options?: ClientSideValiationErrorOptionalParamsInterface & { negativeTest?: boolean, expectedErrorCount?: number }) {
@@ -12,7 +11,7 @@ export class LoginPage extends LumaMainPage {
     const passwordField = this.page.locator(this.passwordFieldLocator);
     const loggedInState = await this.getLoggedInState();
     if (loggedInState === 'not-logged-in') {
-      await this.clickOnLink(this.signInLink);
+      await this.clickSignIn();
       await this.fillText(emailField, email);
       await this.fillText(passwordField, password);
       const signInButton = this.page.getByRole('button', { name: 'Sign In' });

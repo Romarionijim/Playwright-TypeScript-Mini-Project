@@ -27,7 +27,7 @@ export class CheckoutReviewAndPaymentPage extends LumaMainPage {
   }
 
   public async clickPlaceOrder() {
-    await this.submit();
+    await this.clickOnButtonWithRole('Place Order');
   }
 
   public async validatePurchaseConfirmationMessage(purchaseConfirmation: string) {
