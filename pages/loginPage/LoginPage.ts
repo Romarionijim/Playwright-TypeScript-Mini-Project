@@ -1,6 +1,4 @@
-import { Page } from "@playwright/test";
 import { LumaMainPage } from "../LumaMainPage";
-import { ItemShoppingComponentPage } from "../pageComponents/productShoppingComponent/ItemShoppingPage";
 import { ClientSideValiationErrorOptionalParamsInterface } from "../../helpers/optionalParamsInterfaces/OptionalParams";
 
 export class LoginPage extends LumaMainPage {
@@ -8,7 +6,8 @@ export class LoginPage extends LumaMainPage {
   private passwordFieldLocator = '[name="login[password]"]';
   private signInLink = 'Sign In';
 
-  public async login(email: string = process.env.EMAIL as string, password: string = process.env.PASSWORD as string) {
+  public async login(email: string = process.env.EMAIL as string, password: string = process.env.PASSWORD as string,
+    options?: ClientSideValiationErrorOptionalParamsInterface & { negativeTest?: boolean, expectedErrorCount?: number }) {
     const emailField = this.page.locator(this.emailFieldLocator);
     const passwordField = this.page.locator(this.passwordFieldLocator);
     const loggedInState = await this.getLoggedInState();
@@ -20,7 +19,9 @@ export class LoginPage extends LumaMainPage {
       await this.clickElement(signInButton);
       await this.page.waitForTimeout(2500);
     }
-
+    if (options?.negativeTest && options.expectedErrorCount !== undefined) {
+      await this.countClientSideValidationErrors(options.expectedErrorCount, [emailField, passwordField], options)
+    }
   }
 
   public async clickCreateAnAccountButton() {

@@ -24,6 +24,8 @@ export class LumaMainPage extends BasePage {
   private panelHeaderLocator = '[class="panel header"] [class="header links"]';
   private userWelcomeCaptionLocator = '[class="panel wrapper"] [class="greet welcome"]';
   private createAnAccountButtonName = 'Create an Account';
+  private fieldWrapperControlLocator = '.fieldset .control'
+  protected pageMessageCaptionLocator = '[class="page messages"]'
 
   public async chooseMenuBarItem(menuBarItem: MenuBar) {
     let menuBarValue = menuBarItem.valueOf();
@@ -76,26 +78,26 @@ export class LumaMainPage extends BasePage {
       expect(shoppingCartEmptyInnerText).toBe(options?.expectedEmptyShoppingCartCaption);
     } else {
       try {
-        if (options?.validateItemCartCount !== undefined && options.cartTotalItems !== undefined) {
+        if (options?.validateItemCartCount && options.cartTotalItems !== undefined) {
           await this.validateItemCartCount(options.cartTotalItems)
         }
-        if (options?.clickProceedToCheckout !== undefined) {
+        if (options?.clickProceedToCheckout) {
           await this.clickElement(this.proceedToCheckoutButtonLocator);
         }
-        if (options?.validateItemCartSubtotal !== undefined && options.expectedSubTotalPrice !== undefined) {
+        if (options?.validateItemCartSubtotal && options.expectedSubTotalPrice !== undefined) {
           await this.validateCartSubTotalPrice(options.expectedSubTotalPrice)
         }
-        if (options?.modifyItemQuantity !== undefined && options.itemText !== undefined && options.itemQuantity !== undefined) {
+        if (options?.modifyItemQuantity && options.itemText !== undefined && options.itemQuantity !== undefined) {
           await this.modifyCartItemQuantity(options.itemText, options.itemQuantity);
           await this.validateCartItemQuantity(options.itemText, options.itemQuantity);
         }
-        if (options?.removeItemFromCart !== undefined && options.itemText !== undefined && options.cartTotalItems !== undefined) {
+        if (options?.removeItemFromCart && options.itemText !== undefined && options.cartTotalItems !== undefined) {
           await this.removeItemFromCart(options.itemText, options.cartTotalItems)
         }
-        if (options?.clickOnEditPencilIcon !== undefined && options.itemText !== undefined) {
+        if (options?.clickOnEditPencilIcon && options.itemText !== undefined) {
           await this.clickOnCartItemPencilIcon(options.itemText)
         }
-        if (options?.viewAndEditCart !== undefined) {
+        if (options?.viewAndEditCart) {
           await this.clickElement(this.viewAndEditCartLocator);
         }
       } catch (error) {
@@ -188,25 +190,29 @@ export class LumaMainPage extends BasePage {
     const validationErrorsCount = await this.countElement(cliendSideValidationError);
     expect(validationErrorsCount).toBe(expectedCount);
     const inputFields = await this.getInputFieldsValues(inputFieldsLocator);
-    if (options?.allfieldsEmpty !== undefined && inputFields.every(field => field.length === 0)) {
-      const allValidtionErrorsInnerText = await cliendSideValidationError.allInnerTexts();
-      expect(allValidtionErrorsInnerText).toBe(options.validationErrorText);
-    } else {
-      const emptyFieldIndexes: number[] = [];
-      inputFields.forEach((field, index) => {
-        if (field.length === 0) {
-          emptyFieldIndexes.push(index);
-        }
-      });
-      expect(emptyFieldIndexes).toEqual(options?.emptyFieldsIndexes);
-      const validationErrorNthIndex: number[] = []
-      const validationErrorIndexes = await cliendSideValidationError.all();
-      validationErrorIndexes.forEach((validationError, index) => {
-        console.log(`validation error: ${validationError} at index: ${index}`)
-        validationErrorNthIndex.push(index);
-      })
-      expect(validationErrorNthIndex).toEqual(options?.validationErrorsIndexes);
+    const emptyFieldIndexes: number[] = [];
+    inputFields.forEach((field, index) => {
+      if (field.length === 0 || field === '') {
+        emptyFieldIndexes.push(index);
+      }
+    });
+    if (options?.isEmptyFieldPresent) {
+      expect(emptyFieldIndexes).toEqual(options.emptyFieldsIndexes);
     }
+    const validationErrorNthIndex: number[] = []
+    const validationErrorTextList: string[] = []
+    const validationErrorIndexes = await this.page.locator(this.fieldWrapperControlLocator).all();
+    for (let i = 0; i < validationErrorIndexes.length; i++) {
+      const fieldWrapperInnexText = await this.getInnerText(validationErrorIndexes[i]);
+      const validationErrorFilter = validationErrorIndexes[i].filter({ has: cliendSideValidationError })
+      if (await validationErrorFilter.isVisible()) {
+        validationErrorNthIndex.push(i);
+        validationErrorTextList.push(fieldWrapperInnexText);
+      }
+    }
+    expect(validationErrorNthIndex).toEqual(options?.validationErrorsIndexes);
+    expect(validationErrorTextList).toEqual(options?.validationErrorTextList);
+
   }
 
   public async getInputFieldsValues(inputFields: Locator[]) {
@@ -214,7 +220,7 @@ export class LumaMainPage extends BasePage {
     for (let i = 0; i < inputFields.length; i++) {
       const inputField = inputFields[i];
       try {
-        if (await inputField.evaluate(el => el.tagName == 'input')) {
+        if (await inputField.evaluate(el => el.tagName.toLowerCase() == 'input')) {
           const inputFieldValue = await inputField.inputValue()
           inputFieldList.push(inputFieldValue);
         } else {
@@ -255,5 +261,13 @@ export class LumaMainPage extends BasePage {
    */
   public async clickCreateAccount() {
     await this.clickOnLink(this.createAnAccountButtonName);
+  }
+
+  /**
+   * @description it validates the messaga that is displayed at top of a page after a certain action - the message could a success or a failure
+   */
+  public async validateCurrentTopPageMessage(expectedMessage: string) {
+    const pageTopMessageCaptionInnerText = await this.getInnerText(this.pageMessageCaptionLocator);
+    expect(pageTopMessageCaptionInnerText).toBe(expectedMessage);
   }
 }

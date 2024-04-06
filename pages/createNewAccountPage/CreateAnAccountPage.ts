@@ -8,7 +8,6 @@ export class CreateAnAccountPage extends LumaMainPage {
   private passwordFieldLocator = '[title="Password"]'
   private confirmPasswordLocator = '#password-confirmation';
   private passwordStrengthLocator = '#password-strength-meter-container';
-  private registerConfirmationLocator = '[class="page messages"]';
 
   public async fillFirstName(firstName: string) {
     await this.fillText(this.firstNameFieldLocator, firstName);
@@ -36,7 +35,7 @@ export class CreateAnAccountPage extends LumaMainPage {
   }
 
   public async validateNewUserRegistered(newUserRegisterConfirmation: string) {
-    const userRegisterConfirmation = await this.getInnerText(this.registerConfirmationLocator);
+    const userRegisterConfirmation = await this.getInnerText(this.pageMessageCaptionLocator);
     expect(userRegisterConfirmation).toBe(newUserRegisterConfirmation);
 
   }
@@ -55,7 +54,7 @@ export class CreateAnAccountPage extends LumaMainPage {
     await this.confirmPassword(password);
     await this.validatePasswordStrength(passwordStrengh);
     await this.clickCreateAccountButton();
-    await this.waitForElementToBeVisible(this.registerConfirmationLocator);
+    await this.waitForElementToBeVisible(this.pageMessageCaptionLocator);
     await this.validateNewUserRegistered(registerConfirmationText);
   }
 }

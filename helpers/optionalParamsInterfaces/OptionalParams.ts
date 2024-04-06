@@ -24,8 +24,9 @@ export interface ProductItemOptionalParamsInterface {
 }
 
 export interface ClientSideValiationErrorOptionalParamsInterface {
-  allfieldsEmpty?: boolean,
-  validationErrorText?: string,
+  isEmptyFieldPresent?: boolean,
+  allValidationErrorsText?: string,
   emptyFieldsIndexes?: number[],
   validationErrorsIndexes?: number[],
+  validationErrorTextList?: string[],
 }
