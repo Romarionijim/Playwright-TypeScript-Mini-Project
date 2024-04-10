@@ -22,6 +22,7 @@ test('Purchase product end to end test', { tag: ['@SANITY'] }, async ({ checkout
   let shipping: string = 'Shipping';
   let orderTotal: string = 'Order Total';
   let purchaseConfirmation: string = 'Thank you for your purchase!';
+  let expectedShippingAddressDetails: string[] = ['John Doe', 'Jump Street 20', 'Miami, Florida 1000 P.O', 'United States', '55555']  ;
 
   await test.step('navigate to men category ', async () => {
     await menCategoryPage.loadApp();
@@ -39,8 +40,7 @@ test('Purchase product end to end test', { tag: ['@SANITY'] }, async ({ checkout
     await menCategoryPage.performActionsOnShoppingCart({ clickProceedToCheckout: true })
   })
   await test.step('fill shipping details then click on next', async () => {
-    await checkoutShippingPage.fillShippingDetails(company, streetAddress, streetFieldIndex, cityName, state, postalCode, country, phoneNumber, shippingMethod,
-      { signIn: true, email: process.env.EMAIL, password: process.env.PASSWORD });
+    await checkoutShippingPage.fillShippingDetails({ signIn: true, email: process.env.EMAIL, password: process.env.PASSWORD, expectedUserAddressDetails: expectedShippingAddressDetails });
     await checkoutShippingPage.clickNext();
   })
   await test.step('validate cart subtotal - shipping and order total', async () => {

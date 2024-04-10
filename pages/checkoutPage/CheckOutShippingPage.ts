@@ -1,4 +1,11 @@
+import { expect } from "@playwright/test";
 import { LumaMainPage } from "../LumaMainPage";
+
+export interface UserShippingDetailsParams {
+  company?: string, streetAddress?: string, streetFieldindex?: number, city?: string, state?: string,
+  postalCode?: string, country?: string, phoneNumber?: string, shippingMethod?: string, firstname?: string,
+  lastname?: string
+}
 
 export class CheckoutShippingPage extends LumaMainPage {
   private emailFieldLocator = '#customer-email-fieldset #customer-email';
@@ -14,25 +21,47 @@ export class CheckoutShippingPage extends LumaMainPage {
   private shippingMethodTableLocator = '#checkout-shipping-method-load';
   private signinEmailAddressLocator = '#login-email';
   private signinPasswordLocator = '#login-password';
+  private existingAddressLocator = '[class="shipping-address-item selected-item"]';
 
-  public async fillShippingDetails(company: string, streetAddress: string, streetFieldindex: number, city: string, state: string,
-    postalCode: string, country: string, phoneNumber: string, shippingMethod: string, options?: { signIn?: boolean, email?: string, password?: string, firstname?: string, lastname?: string }) {
+  /**
+   * @description this function fills the shipping details if the user is not signed in already otherwise validate the populated existing address.
+   * if the user does not sign in - user must fill firstname, lastname and email address.
+   * @param company 
+   * @param streetAddress 
+   * @param streetFieldindex 
+   * @param city 
+   * @param state 
+   * @param postalCode 
+   * @param country 
+   * @param phoneNumber 
+   * @param shippingMethod 
+   * @param options 
+   */
+  public async fillShippingDetails(options?: { signIn?: boolean, email?: string, password?: string, expectedUserAddressDetails?: string[] } & UserShippingDetailsParams) {
     if (options?.signIn && options.email !== undefined && options.password !== undefined) {
       await this.signIn(options.email, options.password)
       await this.page.waitForTimeout(2500);
+      const existingUserAddressDetails = this.page.locator(this.existingAddressLocator);
+      const isUserAddressDetailsVisibile = await existingUserAddressDetails.isVisible()
+      if (!isUserAddressDetailsVisibile) {
+        await this.fillCompanyName(options.company!);
+        await this.fillStreetAddress(options.streetFieldindex!, options.streetAddress!);
+        await this.fillCityName(options.city!);
+        await this.selectState(options.state!)
+        await this.fillPostalCode(options.postalCode!);
+        await this.selectCountry(options.country!);
+        await this.fillPhoneNumber(options.phoneNumber!);
+        await this.chooseShippingMethod(options.shippingMethod!);
+      } else {
+        const addressDetails = await this.getAddressDetailsList();
+        expect(addressDetails).toEqual([options.expectedUserAddressDetails]);
+      }
     } else if (options?.email !== undefined && options.firstname !== undefined && options.lastname !== undefined) {
       await this.fillEmailAddress(options?.email!);
       await this.fillFirstName(options?.firstname!);
       await this.fillLastName(options?.lastname!);
     }
-    await this.fillCompanyName(company);
-    await this.fillStreetAddress(streetFieldindex, streetAddress);
-    await this.fillCityName(city);
-    await this.selectState(state)
-    await this.fillPostalCode(postalCode);
-    await this.selectCountry(country);
-    await this.fillPhoneNumber(phoneNumber);
-    await this.chooseShippingMethod(shippingMethod);
+
   }
 
   public async fillEmailAddress(email: string) {
@@ -93,5 +122,11 @@ export class CheckoutShippingPage extends LumaMainPage {
 
   public async clickNext() {
     await this.clickOnButtonWithRole('Next');
+  }
+
+  private async getAddressDetailsList() {
+    const addressDetailsInnerText = await this.getInnerText(this.existingAddressLocator);
+    const addressDetailsList = addressDetailsInnerText.split('\n');
+    return addressDetailsList;
   }
 }
