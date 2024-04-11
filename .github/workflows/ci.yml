@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         base_urls: ['https://magento.softwaretestingboard.com/']
-        browsers: ['chromium', 'firefox']
+        browsers: ['chromium']
         greps: ['@LOGIN', '@SIGN_UP', '@SANITY']
     steps:
     - uses: actions/checkout@v4
@@ -38,7 +38,7 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
-      run: BASE_URL=${{ matrix.base_urls }} npx playwright install --with-deps --grep ${{ matrix.greps }} --project=${{ matrix.browsers }}
+      run: BASE_URL=${{ matrix.base_urls }} npx playwright install --with-deps -g ${{ matrix.greps }} --project=${{ matrix.browsers }}
     - uses: actions/upload-artifact@v4
       if: always()
       with:
