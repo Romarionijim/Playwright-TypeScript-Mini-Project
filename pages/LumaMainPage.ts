@@ -83,10 +83,6 @@ export class LumaMainPage extends BasePage {
         if (options?.validateItemCartCount && options.cartTotalItems !== undefined) {
           await this.validateItemCartCount(options.cartTotalItems)
         }
-        if (options?.clickProceedToCheckout) {
-          await this.clickElement(this.proceedToCheckoutButtonLocator);
-          await this.page.waitForTimeout(2500);
-        }
         if (options?.validateItemCartSubtotal && options.expectedSubTotalPrice !== undefined) {
           await this.validateCartSubTotalPrice(options.expectedSubTotalPrice)
         }
@@ -94,14 +90,18 @@ export class LumaMainPage extends BasePage {
           await this.modifyCartItemQuantity(options.itemText, options.itemQuantity);
           await this.validateCartItemQuantity(options.itemText, options.itemQuantity);
         }
-        if (options?.removeItemFromCart && options.itemText !== undefined && options.cartTotalItems !== undefined) {
-          await this.removeItemFromCart(options.itemText, options.cartTotalItems)
-        }
         if (options?.clickOnEditPencilIcon && options.itemText !== undefined) {
           await this.clickOnCartItemPencilIcon(options.itemText)
         }
+        if (options?.removeItemFromCart && options.itemText !== undefined && options.cartTotalItems !== undefined) {
+          await this.removeItemFromCart(options.itemText, options.cartTotalItems)
+        }
         if (options?.viewAndEditCart) {
           await this.clickElement(this.viewAndEditCartLocator);
+        }
+        if (options?.clickProceedToCheckout) {
+          await this.clickElement(this.proceedToCheckoutButtonLocator);
+          await this.page.waitForTimeout(2500);
         }
       } catch (error) {
         throw new Error(`pleasae refer to function "performActionsOnShoppingCart" - the condition may not be satisifed `)

@@ -40,8 +40,8 @@ export class BasePage {
    * @description applies to checkboxes and radio buttons
    * @param label 
    */
-  public async changeCheckBoxState(label: string) {
-    const checkBox = this.page.locator(label);
+  public async changeCheckBoxState(locator: (string | Locator)) {
+    const checkBox = await this.getTypeOfLocator(locator)
     const isChecked = await checkBox.isChecked();
     if (!isChecked) {
       await checkBox.check();

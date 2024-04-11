@@ -54,8 +54,9 @@ export class CheckoutShippingPage extends LumaMainPage {
         await this.chooseShippingMethod(options.shippingMethod!);
       } else {
         const addressDetails = await this.getAddressDetailsList();
-        expect(addressDetails).toEqual([options.expectedUserAddressDetails]);
+        expect(addressDetails).toEqual(options.expectedUserAddressDetails);
       }
+      await this.chooseShippingMethod(options.shippingMethod!)
     } else if (options?.email !== undefined && options.firstname !== undefined && options.lastname !== undefined) {
       await this.fillEmailAddress(options?.email!);
       await this.fillFirstName(options?.firstname!);
@@ -114,10 +115,9 @@ export class CheckoutShippingPage extends LumaMainPage {
   }
 
   public async chooseShippingMethod(tableRowText: string) {
-    const shippingMethodTable = this.page.locator(this.shippingMethodTableLocator);
-    const shippingMethodRow = this.page.locator(`${shippingMethodTable} tbody tr`, { hasText: tableRowText });
-    const shippingMethodRadioButton = shippingMethodRow.locator('input[type="radio"]');
-    await this.clickElement(shippingMethodRadioButton);
+    const shippingMethodTableRow = this.page.locator(`${this.shippingMethodTableLocator} tbody tr`, { hasText: tableRowText });
+    const shippingMethodRadioButton = shippingMethodTableRow.locator('input[type="radio"]');
+    await this.changeCheckBoxState(shippingMethodRadioButton)
   }
 
   public async clickNext() {
@@ -125,8 +125,12 @@ export class CheckoutShippingPage extends LumaMainPage {
   }
 
   private async getAddressDetailsList() {
+    const newDetailsList: string[] = []
     const addressDetailsInnerText = await this.getInnerText(this.existingAddressLocator);
     const addressDetailsList = addressDetailsInnerText.split('\n');
-    return addressDetailsList;
+    for (let item of addressDetailsList) {
+      newDetailsList.push(item)
+    }
+    return newDetailsList;
   }
 }
