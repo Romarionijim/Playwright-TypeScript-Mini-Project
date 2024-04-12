@@ -19,7 +19,7 @@ export class LoginPage extends LumaMainPage {
       await this.page.waitForTimeout(2500);
     }
     if (options?.negativeTest && options.expectedErrorCount !== undefined) {
-      await this.countClientSideValidationErrors(options.expectedErrorCount, [emailField, passwordField], options)
+      await this.handleClientSideValidationErrors(options.expectedErrorCount, [emailField, passwordField], options)
     }
   }
 

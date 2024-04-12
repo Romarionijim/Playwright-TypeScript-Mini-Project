@@ -21,7 +21,7 @@ jobs:
       matrix:
         base_urls: ['https://magento.softwaretestingboard.com/']
         browsers: ['chromium']
-        greps: ['@LOGIN', '@SIGN_UP', '@SANITY']
+        greps: ['@LOGIN', '@SIGN_UP', '@SANITY', '@MEN_CATEGORY_SHOPPING']
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4

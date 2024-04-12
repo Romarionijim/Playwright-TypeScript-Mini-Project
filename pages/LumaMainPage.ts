@@ -27,6 +27,7 @@ export class LumaMainPage extends BasePage {
   private fieldWrapperControlLocator = '.fieldset .control'
   protected pageMessageCaptionLocator = '[class="page messages"]'
   private navigationMenuBar = '.navigation a';
+  private dialogFooterLocator = '[class="modal-footer"]';
 
   public async chooseMenuBarOption(menuBarItem: MenuBar) {
     let menuBarValue = this.page.locator(this.navigationMenuBar, { hasText: new RegExp(`^\\${menuBarItem.valueOf()}\\b$`, 'i') });
@@ -58,7 +59,7 @@ export class LumaMainPage extends BasePage {
   }
 
   public async clickOnShoppingCart() {
-    await this.clickElement(this.shoppingCartLocator);
+    await this.clickElement(this.numberOfCartItemsQuantityLocator);
 
   }
 
@@ -93,8 +94,8 @@ export class LumaMainPage extends BasePage {
         if (options?.clickOnEditPencilIcon && options.itemText !== undefined) {
           await this.clickOnCartItemPencilIcon(options.itemText)
         }
-        if (options?.removeItemFromCart && options.itemText !== undefined && options.cartTotalItems !== undefined) {
-          await this.removeItemFromCart(options.itemText, options.cartTotalItems)
+        if (options?.removeItemFromCart && options.itemText !== undefined && options.cartTotalItems !== undefined && options.cartRemovalDialogButtonRole !== undefined) {
+          await this.removeItemFromCart(options.itemText, options.cartTotalItems, options.cartRemovalDialogButtonRole)
         }
         if (options?.viewAndEditCart) {
           await this.clickElement(this.viewAndEditCartLocator);
@@ -133,14 +134,21 @@ export class LumaMainPage extends BasePage {
     expect(itemQuantityInputValue).toBe(itemQuantity);
   }
 
-  private async removeItemFromCart(itemText: string, expectedCartCount: number) {
+  private async removeItemFromCart(itemText: string, expectedCartCount: number, buttonRole: string) {
     const removeItemButton = await this.getNestedCartItemLocator(itemText, this.trashIconLocator);
     await this.clickElement(removeItemButton);
+    const itemRemovalConfirmation = this.page.locator('div', { hasText: 'Are you sure you would like to remove this item from the shopping cart?' })
+    if (await itemRemovalConfirmation.isVisible()) {
+      const dialogFooterButton = this.page.getByRole('button', { name: buttonRole })
+      await this.clickElement(dialogFooterButton);
+    }
+    await this.clickElement(this.shoppingCartItemCountLocator);
     await this.countShoppingCartItems(expectedCartCount);
   }
 
   private async clickOnCartItemPencilIcon(itemText: string) {
     const pencilIcon = await this.getNestedCartItemLocator(itemText, this.cartPencilIconLocator);
+    await this.clickElement(pencilIcon);
   }
 
   /**
@@ -154,6 +162,7 @@ export class LumaMainPage extends BasePage {
     const nestedLocatorElement = item.locator(nestedLocator);
     return nestedLocatorElement;
   }
+
 
   /**
    * @description validates the number of items that are displayed on the shopping cart
@@ -188,7 +197,19 @@ export class LumaMainPage extends BasePage {
     expect(currentPageTitle).toBe(pageTitle);
   }
 
-  public async countClientSideValidationErrors(expectedCount: number, inputFieldsLocator: Locator[], options?: ClientSideValiationErrorOptionalParamsInterface) {
+  /**
+   * @description this function is meant for negative testing to validate that the client side validation errors are displayed
+   * on the relevant corresponding fields.
+   * It handles situiations where fields are empty or when typing invalid data in the fields.
+   * The purpose of this funciton is to return the index of the fields in case they are empty with validation on empty fields
+   * as well as returning the client side validation error text and on what fields it occured.
+   * The function returns an array of the validation error innertext and the index of each error and makes an assertion validation 
+   * on the number of errors that occured, on which field they occoured and their text.
+   * @param expectedCount 
+   * @param inputFieldsLocator 
+   * @param options 
+   */
+  public async handleClientSideValidationErrors(expectedCount: number, inputFieldsLocator: Locator[], options?: ClientSideValiationErrorOptionalParamsInterface) {
     const cliendSideValidationError = this.page.locator(this.clientSideValidationErrorLocator);
     const validationErrorsCount = await this.countElement(cliendSideValidationError);
     expect(validationErrorsCount).toBe(expectedCount);
@@ -223,7 +244,7 @@ export class LumaMainPage extends BasePage {
     for (let i = 0; i < inputFields.length; i++) {
       const inputField = inputFields[i];
       try {
-        if (await inputField.evaluate(el => el.tagName.toLowerCase() == 'input')) {
+        if (await inputField.evaluate(el => el.tagName.toLowerCase() === 'input')) {
           const inputFieldValue = await inputField.inputValue()
           inputFieldList.push(inputFieldValue);
         } else {
@@ -247,8 +268,8 @@ export class LumaMainPage extends BasePage {
    */
   public async getLoggedInState() {
     const panelHeader = this.page.locator(this.panelHeaderLocator);
-    const PanelHeaderChildTag = panelHeader.locator('span');
-    const loggedInClassAttribute = await PanelHeaderChildTag.getAttribute('class')
+    const panelHeaderChildTag = panelHeader.locator('span');
+    const loggedInClassAttribute = await panelHeaderChildTag.getAttribute('class')
     return loggedInClassAttribute;
   }
 
@@ -272,5 +293,29 @@ export class LumaMainPage extends BasePage {
   public async validateCurrentTopPageMessage(expectedMessage: string) {
     const pageTopMessageCaptionInnerText = await this.getInnerText(this.pageMessageCaptionLocator);
     expect(pageTopMessageCaptionInnerText).toBe(expectedMessage);
+  }
+
+  public async getColumnIndexByName(tableLocator: string, columnName: string) {
+    const tableColumns = await this.page.locator(`${tableLocator} thead th`).all();
+    for (let i = 0; i < tableColumns.length; i++) {
+      const columnInnerText = await this.getInnerText(tableColumns[i]);
+      if (columnInnerText === columnName) {
+        return i;
+      }
+    }
+    throw new Error(`column: ${columnName} does not exist on target table`)
+  }
+
+  public async validateTableCellValue(tableLocator: string, rowText: string, column: string, expectedCellValue: string) {
+    const tableRow = this.page.locator(`${tableLocator} tbody tr`, { hasText: rowText });
+    const tableColumn = await this.getColumnIndexByName(tableLocator, column);
+    const tableCell = tableRow.locator('td').nth(tableColumn);
+    const cellInnerText = await this.getInnerText(tableCell);
+    expect(cellInnerText).toBe(expectedCellValue);
+  }
+
+  public async proceedToCheckout() {
+    const proceedToCheckoutButton = this.page.getByRole('button', { name: 'Proceed to Checkout' });
+    await this.clickElement(proceedToCheckoutButton);
   }
 }

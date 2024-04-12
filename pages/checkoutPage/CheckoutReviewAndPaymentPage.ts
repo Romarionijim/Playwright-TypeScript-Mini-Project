@@ -14,9 +14,10 @@ export class CheckoutReviewAndPaymentPage extends LumaMainPage {
     }
   }
 
-  public async validateBillingAndShippingDetails(billingShippingDetails: string) {
+  public async validateBillingAndShippingDetails(billingShippingDetails: string[]) {
     const shippingDetailsInnerText = await this.getInnerText(this.billingAddressDetailsLocator);
-    expect(shippingDetailsInnerText).toBe(billingShippingDetails);
+    const shippingDetailsList = shippingDetailsInnerText.split('\n')
+    expect(shippingDetailsList).toContain(billingShippingDetails);
   }
 
   public async validateOrderSummaryExpenses(tableRowText: string, expectedOrderTotal: string) {

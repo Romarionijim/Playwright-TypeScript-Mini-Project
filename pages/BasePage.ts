@@ -74,7 +74,7 @@ export class BasePage {
    */
   public async getInnerText(locator: (string | Locator)) {
     const locatorElement = await this.getTypeOfLocator(locator);
-    if (await locatorElement.evaluate(el => el.tagName === 'input')) {
+    if (await locatorElement.evaluate(el => el.tagName.toLowerCase() === 'input')) {
       return (await locatorElement.inputValue()).trim();
     } else {
       return (await locatorElement.innerText()).trim();

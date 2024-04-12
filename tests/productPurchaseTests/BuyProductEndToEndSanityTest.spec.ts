@@ -1,7 +1,6 @@
 import { MenuBar } from '../../common/navigationEnums/menuBar/MenuBarEnum'
 import { MenuBarCategories } from '../../common/navigationEnums/menuBarCategories/MenuBarCategories';
 import { MenuBarSubCategories } from '../../common/navigationEnums/menuBarSubCategories/MenuBarSubCategories';
-import Randomizer from '../../helpers/faker/FakeDataRandomizer';
 import { test } from '../../helpers/fixtures/customFixtures/CustomFixtures'
 
 test('Purchase product end to end test', { tag: ['@SANITY'] }, async ({ checkoutShippingPage, checkoutPaymentPage, menCategoryPage }) => {
@@ -9,20 +8,12 @@ test('Purchase product end to end test', { tag: ['@SANITY'] }, async ({ checkout
   let productSize: string = 'L';
   let productColor: string = 'Orange';
   let totalItemInCartNumber: string = '1';
-  let company: string = Randomizer.getRandomCompanyName();
-  let cityName: string = Randomizer.getRandomCityName()
-  let country: string = Randomizer.getRandomCountry();
-  let postalCode: string = Randomizer.getRandomPostalCode();
-  let phoneNumber: string = Randomizer.getRandomPhoneNumber();
-  let streetAddress: string = Randomizer.getRandomStreetAddress();
-  let streetFieldIndex: number = 0;
-  let state: string = Randomizer.getRandomState();
   let shippingMethod: string = 'Flat Rate';
   let cartSubtotal: string = 'Cart Subtotal';
   let shipping: string = 'Shipping';
   let orderTotal: string = 'Order Total';
   let purchaseConfirmation: string = 'Thank you for your purchase!';
-  let expectedShippingAddressDetails: string[] = ['John Doe', 'Jump Street 20', 'Miami, Florida 1000 P.O', 'United States', '55555'];
+  let expectedUserAddressDetails: string[] = ['John Doe', 'Jump Street 20', 'Miami, Florida 1000 P.O', 'United States', '55555'];
 
   await test.step('navigate to men category ', async () => {
     await menCategoryPage.loadApp();
@@ -40,7 +31,7 @@ test('Purchase product end to end test', { tag: ['@SANITY'] }, async ({ checkout
     await menCategoryPage.performActionsOnShoppingCart({ clickProceedToCheckout: true })
   })
   await test.step('fill shipping details then click on next', async () => {
-    await checkoutShippingPage.fillShippingDetails({ signIn: true, email: process.env.EMAIL, password: process.env.PASSWORD, expectedUserAddressDetails: expectedShippingAddressDetails, shippingMethod });
+    await checkoutShippingPage.fillShippingDetails({ signIn: true, email: process.env.EMAIL, password: process.env.PASSWORD, expectedUserAddressDetails, shippingMethod });
     await checkoutShippingPage.clickNext();
   })
   await test.step('validate cart subtotal - shipping and order total', async () => {

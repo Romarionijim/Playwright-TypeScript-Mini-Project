@@ -5,6 +5,8 @@ import { CreateAnAccountPage } from '../../../pages/createNewAccountPage/CreateA
 import { MenCategoryPage } from '../../../pages/men/MenCategoryPage';
 import { CheckoutShippingPage } from '../../../pages/checkoutPage/CheckOutShippingPage';
 import { CheckoutReviewAndPaymentPage } from '../../../pages/checkoutPage/CheckoutReviewAndPaymentPage';
+import { ShoppingCartPage } from '../../../pages/cartPage/ShoppingCartPage';
+import { WomenCategoryPage } from '../../../pages/women/WomenCategoryPage';
 
 type MyFixtures = {
   loginPage: LoginPage;
@@ -15,6 +17,8 @@ type MyFixtures = {
   menCategoryPage: MenCategoryPage;
   checkoutShippingPage: CheckoutShippingPage;
   checkoutPaymentPage: CheckoutReviewAndPaymentPage;
+  shoppingCartPage: ShoppingCartPage;
+  womenCategoryPage: WomenCategoryPage;
 }
 
 /**
@@ -56,6 +60,14 @@ export const test = base.extend<MyFixtures>({
   },
   checkoutPaymentPage: async ({ page, context }, use) => {
     await use(new CheckoutReviewAndPaymentPage(page))
+    await context.clearCookies();
+  },
+  shoppingCartPage: async ({ page, context }, use) => {
+    await use(new ShoppingCartPage(page));
+    await context.clearCookies();
+  },
+  womenCategoryPage: async ({ page, context }, use) => {
+    await use(new WomenCategoryPage(page));
     await context.clearCookies();
   }
 })

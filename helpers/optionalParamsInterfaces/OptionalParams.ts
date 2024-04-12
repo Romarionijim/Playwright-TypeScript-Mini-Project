@@ -11,6 +11,7 @@ export interface CartActionsOptionalParamsInterface {
   expectedSubTotalPrice?: string;
   itemText?: string;
   itemQuantity?: string;
+  cartRemovalDialogButtonRole?: string
 }
 
 export interface ProductItemOptionalParamsInterface {
@@ -31,6 +32,9 @@ export interface ClientSideValiationErrorOptionalParamsInterface {
   validationErrorTextList?: string[],
 }
 
-export interface ShippingAddressCheckoutOptionalParams {
-  signIn?: boolean, email?: string, password?: string, firstname?: string, lastname?: string
+
+export interface UserShippingDetailsParams {
+  company?: string, streetAddress?: string, streetFieldindex?: number, city?: string, state?: string,
+  postalCode?: string, country?: string, phoneNumber?: string, shippingMethod?: string, firstname?: string,
+  lastname?: string
 }

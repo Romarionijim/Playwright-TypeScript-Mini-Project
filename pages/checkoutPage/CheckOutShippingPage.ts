@@ -1,11 +1,7 @@
 import { expect } from "@playwright/test";
 import { LumaMainPage } from "../LumaMainPage";
+import { UserShippingDetailsParams } from "../../helpers/optionalParamsInterfaces/OptionalParams";
 
-export interface UserShippingDetailsParams {
-  company?: string, streetAddress?: string, streetFieldindex?: number, city?: string, state?: string,
-  postalCode?: string, country?: string, phoneNumber?: string, shippingMethod?: string, firstname?: string,
-  lastname?: string
-}
 
 export class CheckoutShippingPage extends LumaMainPage {
   private emailFieldLocator = '#customer-email-fieldset #customer-email';
@@ -61,8 +57,9 @@ export class CheckoutShippingPage extends LumaMainPage {
       await this.fillEmailAddress(options?.email!);
       await this.fillFirstName(options?.firstname!);
       await this.fillLastName(options?.lastname!);
+    } else {
+      throw new Error('none of the conditions were satisfied in the fillShippingDetails function')
     }
-
   }
 
   public async fillEmailAddress(email: string) {
@@ -125,12 +122,8 @@ export class CheckoutShippingPage extends LumaMainPage {
   }
 
   private async getAddressDetailsList() {
-    const newDetailsList: string[] = []
     const addressDetailsInnerText = await this.getInnerText(this.existingAddressLocator);
     const addressDetailsList = addressDetailsInnerText.split('\n');
-    for (let item of addressDetailsList) {
-      newDetailsList.push(item)
-    }
-    return newDetailsList;
+    return addressDetailsList;
   }
 }
