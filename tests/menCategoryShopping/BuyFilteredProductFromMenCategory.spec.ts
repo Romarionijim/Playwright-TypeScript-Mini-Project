@@ -25,6 +25,7 @@ test('purchase product from specific category', { tag: ['@MEN_CATEGORY_SHOPPING'
   let phoneNumber: string = Randomizer.getRandomPhoneNumber();
   let shippingMethod: string = 'Best Way';
   let purchaseConfirmation: string = 'Thank you for your purchase!';
+  let streetFieldIndex: number = 0;
 
   await test.step('choose men category then hover over men tops and click on jackets', async () => {
     await menCategoryPage.chooseMenuBarOption(MenuBar.MEN);
@@ -43,9 +44,9 @@ test('purchase product from specific category', { tag: ['@MEN_CATEGORY_SHOPPING'
     await menCategoryPage.performActionsOnShoppingCart({ cartTotalItems: cartQuantity, clickProceedToCheckout: true })
   })
   await test.step('fill shipping details, choose shipping method and click on next for payment address validation', async () => {
-    await checkoutShippingPage.fillShippingDetails({ email, firstname, lastname, country, company, streetAddress, city, state, postalCode, phoneNumber, shippingMethod });
+    await checkoutShippingPage.fillShippingDetails({ email, firstname, lastname, country, company, streetFieldIndex: streetFieldIndex, streetAddress, city, state, postalCode, phoneNumber, shippingMethod });
     await checkoutShippingPage.clickNext();
-    await checkoutPaymentPage.validateBillingAndShippingDetails([`${firstname} ${lastname}`, streetAddress, `${city}, ${state} ${postalCode}`, country, phoneNumber])
+    await checkoutPaymentPage.validateBillingAndShippingDetails([`${firstname} ${lastname}`, streetAddress,  `${city}, ${state} ${postalCode}`, country, phoneNumber])
   })
   await test.step('place order and validate order was successful', async () => {
     await checkoutPaymentPage.clickPlaceOrder();

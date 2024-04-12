@@ -34,7 +34,15 @@ export interface ClientSideValiationErrorOptionalParamsInterface {
 
 
 export interface UserShippingDetailsParams {
-  company?: string, streetAddress?: string, streetFieldindex?: number, city?: string, state?: string,
-  postalCode?: string, country?: string, phoneNumber?: string, shippingMethod?: string, firstname?: string,
+  company?: string,
+  streetAddress?: string,
+  streetFieldIndex?: number,
+  city?: string,
+  state?: string,
+  postalCode?: string,
+  country?: string,
+  phoneNumber?: string,
+  shippingMethod?: string,
+  firstname?: string,
   lastname?: string
 }

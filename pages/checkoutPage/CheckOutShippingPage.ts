@@ -37,28 +37,25 @@ export class CheckoutShippingPage extends LumaMainPage {
     if (options?.signIn && options.email !== undefined && options.password !== undefined) {
       await this.signIn(options.email, options.password)
       await this.page.waitForTimeout(2500);
-      const existingUserAddressDetails = this.page.locator(this.existingAddressLocator);
-      const isUserAddressDetailsVisibile = await existingUserAddressDetails.isVisible()
-      if (!isUserAddressDetailsVisibile) {
-        await this.fillCompanyName(options.company!);
-        await this.fillStreetAddress(options.streetFieldindex!, options.streetAddress!);
-        await this.fillCityName(options.city!);
-        await this.selectState(options.state!)
-        await this.fillPostalCode(options.postalCode!);
-        await this.selectCountry(options.country!);
-        await this.fillPhoneNumber(options.phoneNumber!);
-        await this.chooseShippingMethod(options.shippingMethod!);
-      } else {
-        const addressDetails = await this.getAddressDetailsList();
-        expect(addressDetails).toEqual(options.expectedUserAddressDetails);
-      }
-      await this.chooseShippingMethod(options.shippingMethod!)
     } else if (options?.email !== undefined && options.firstname !== undefined && options.lastname !== undefined) {
       await this.fillEmailAddress(options?.email!);
       await this.fillFirstName(options?.firstname!);
       await this.fillLastName(options?.lastname!);
+    }
+    const existingUserAddressDetails = this.page.locator(this.existingAddressLocator);
+    const isUserAddressDetailsVisibile = await existingUserAddressDetails.isVisible()
+    if (isUserAddressDetailsVisibile) {
+      const addressDetails = await this.getAddressDetailsList();
+      expect(addressDetails).toEqual(options?.expectedUserAddressDetails);
     } else {
-      throw new Error('none of the conditions were satisfied in the fillShippingDetails function')
+      await this.fillCompanyName(options?.company!);
+      await this.fillStreetAddress(options?.streetFieldIndex!, options?.streetAddress!);
+      await this.fillCityName(options?.city!);
+      await this.selectState(options?.state!)
+      await this.fillPostalCode(options?.postalCode!);
+      await this.selectCountry(options?.country!);
+      await this.fillPhoneNumber(options?.phoneNumber!);
+      await this.chooseShippingMethod(options?.shippingMethod!);
     }
   }
 
