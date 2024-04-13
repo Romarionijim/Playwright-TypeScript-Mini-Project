@@ -63,7 +63,7 @@ export class BasePage {
     await locatorElement.clear();
   }
 
-  public async countElement(locator: (string | Locator)) {
+  public async countElements(locator: (string | Locator)) {
     const locatorElement = await this.getTypeOfLocator(locator);
     const locatorCount = await locatorElement.count();
     return locatorCount;
@@ -86,7 +86,7 @@ export class BasePage {
   }
 
   public async getPageUrl() {
-    const pageUrl = this.page.url;
+    const pageUrl = this.page.url();
     return pageUrl;
   }
 

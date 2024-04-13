@@ -29,7 +29,7 @@ test('purchase product from specific category', { tag: ['@MEN_CATEGORY_SHOPPING'
 
   await test.step('choose men category then hover over men tops and click on jackets', async () => {
     await menCategoryPage.chooseMenuBarOption(MenuBar.MEN);
-    await menCategoryPage.chooseMenuCategory(MenuBarCategories.MEN_TOPS);
+    await menCategoryPage.chooseMenuCategory(MenuBarCategories.TOPS);
     await menCategoryPage.chooseMenuSubCategory(MenuBarSubCategories.JACKETS);
   })
   await test.step('validate that your in the jackets category page and choose jacket style from side bar shopping options', async () => {
@@ -38,7 +38,7 @@ test('purchase product from specific category', { tag: ['@MEN_CATEGORY_SHOPPING'
   })
   await test.step('validate the items are acutally filtered by lightweight jackets, choose jacket size and color then add jacket to cart', async () => {
     await menCategoryPage.sideBarShoppingComponent.validateFilteredOptions(filters);
-    await menCategoryPage.itemShoppingPage.chooseProductItem(jacketName, { chooseSize: true, size: jacketSize, chooseColor: true, color: jacketColor, addItemToCart: true });
+    await menCategoryPage.itemShoppingComponent.chooseProductItem(jacketName, { chooseSize: true, size: jacketSize, chooseColor: true, color: jacketColor, addItemToCart: true });
   })
   await test.step('click on cart validate cart item quantity then proceed to checkout', async () => {
     await menCategoryPage.performActionsOnShoppingCart({ cartTotalItems: cartQuantity, clickProceedToCheckout: true })

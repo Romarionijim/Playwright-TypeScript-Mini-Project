@@ -18,11 +18,11 @@ test('Purchase product end to end test', { tag: ['@SANITY'] }, async ({ checkout
   await test.step('navigate to men category ', async () => {
     await menCategoryPage.loadApp();
     await menCategoryPage.chooseMenuBarOption(MenuBar.MEN);
-    await menCategoryPage.chooseMenuCategory(MenuBarCategories.MEN_TOPS);
+    await menCategoryPage.chooseMenuCategory(MenuBarCategories.TOPS);
     await menCategoryPage.chooseMenuSubCategory(MenuBarSubCategories.JACKETS);
   })
   await test.step('choose a product with size and color then add product to cart', async () => {
-    await menCategoryPage.itemShoppingPage.chooseProductItem(productName, { chooseSize: true, size: productSize, chooseColor: true, color: productColor, addItemToCart: true })
+    await menCategoryPage.itemShoppingComponent.chooseProductItem(productName, { chooseSize: true, size: productSize, chooseColor: true, color: productColor, addItemToCart: true })
   })
   await test.step('validate there is one item in cart', async () => {
     await menCategoryPage.validateNumberOfItemInCart(totalItemInCartNumber);

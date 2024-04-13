@@ -13,6 +13,8 @@ export class ItemShoppingComponentPage extends BasePage {
   private productItemSize = '[class="swatch-attribute size"]';
   private productColorLocator = '[class="swatch-attribute color"]';
   private productPriceLocator = '.price';
+  private productItemInCartLocator = '[class="product-info-main"]';
+  private productQtyLocator = '#qty';
 
   /**
    * @description function to choose a product item with flexible options to choose from
@@ -21,7 +23,7 @@ export class ItemShoppingComponentPage extends BasePage {
    * in the test
    */
   public async chooseProductItem(productName: string, options?: ProductItemOptionalParamsInterface) {
-    const productItem = this.page.locator(this.productItemLocator, { hasText: productName });
+    const productItem = await this.deterimeItemScope(productName);
     await this.hover(productItem);
     try {
       if (options?.chooseSize && options.size !== undefined) {
@@ -32,6 +34,9 @@ export class ItemShoppingComponentPage extends BasePage {
       }
       if (options?.validatePrice && options.price !== undefined) {
         await this.validateItemPrice(productItem, options.price);
+      }
+      if (options?.modifyQuantity && options.quantity !== undefined) {
+        await this.modifyQuantity(productItem, options.quantity)
       }
       if (options?.addItemToCart) {
         await this.addProductItemToCart(productItem);
@@ -53,6 +58,11 @@ export class ItemShoppingComponentPage extends BasePage {
     await this.clickElement(chosenColor);
   }
 
+  private async modifyQuantity(productItemLocator: Locator, quantity: string) {
+    const itemQuantity = productItemLocator.locator(this.productQtyLocator);
+    await this.fillText(itemQuantity, quantity);
+  }
+
   private async validateItemPrice(productItemLocator: Locator, price: string) {
     const productItemPrice = productItemLocator.locator(this.productPriceLocator);
     expect(productItemPrice).toBe(price);
@@ -62,5 +72,22 @@ export class ItemShoppingComponentPage extends BasePage {
     const addToCartButton = this.page.getByRole('button', { name: this.addToCartButtonText });
     const addProductToCart = productItemLocator.locator(addToCartButton);
     await this.clickElement(addProductToCart);
+  }
+
+  /**
+   * @description returns the scope of the item if it is an item in a random page or is it inside a cart to get the correct locator
+   * and choose product with the correct options and reduce code duplication
+   * @param itemText 
+   * @returns 
+   */
+  private async deterimeItemScope(itemText: string) {
+    let itemLocator: Locator | undefined;
+    let currentPageUrl = await this.getPageUrl();
+    if (currentPageUrl.includes('cart')) {
+      itemLocator = this.page.locator(this.productItemInCartLocator, { hasText: itemText });
+    } else {
+      itemLocator = this.page.locator(this.productItemLocator, { hasText: itemText });
+    }
+    return itemLocator;
   }
 }

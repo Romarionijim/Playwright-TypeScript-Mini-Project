@@ -22,6 +22,8 @@ export interface ProductItemOptionalParamsInterface {
   validatePrice?: boolean,
   price?: string,
   addItemToCart?: boolean,
+  modifyQuantity?: boolean,
+  quantity?: string,
 }
 
 export interface ClientSideValiationErrorOptionalParamsInterface {

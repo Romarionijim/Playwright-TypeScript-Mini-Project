@@ -7,6 +7,7 @@ import { CheckoutShippingPage } from '../../../pages/checkoutPage/CheckOutShippi
 import { CheckoutReviewAndPaymentPage } from '../../../pages/checkoutPage/CheckoutReviewAndPaymentPage';
 import { ShoppingCartPage } from '../../../pages/cartPage/ShoppingCartPage';
 import { WomenCategoryPage } from '../../../pages/women/WomenCategoryPage';
+import { ProductPage } from '../../../pages/productPage/ProductPage';
 
 type MyFixtures = {
   loginPage: LoginPage;
@@ -19,6 +20,7 @@ type MyFixtures = {
   checkoutPaymentPage: CheckoutReviewAndPaymentPage;
   shoppingCartPage: ShoppingCartPage;
   womenCategoryPage: WomenCategoryPage;
+  productPage: ProductPage;
 }
 
 /**
@@ -30,44 +32,41 @@ export const test = base.extend<MyFixtures>({
     await loginPage.loadApp();
     await loginPage.login();
     await use(loginPage);
-    await context.clearCookies()
   },
   loadApplication: async ({ page, context }, use) => {
     let lumaMainPage = new LumaMainPage(page);
     await lumaMainPage.loadApp();
     await use(lumaMainPage);
-    await context.clearCookies();
   },
-  loginPage: async ({ page, context }, use) => {
+  loginPage: async ({ page }, use) => {
     await use(new LoginPage(page));
-    await context.clearCookies();
   },
-  lumaMainPage: async ({ page, context }, use) => {
+  lumaMainPage: async ({ page }, use) => {
     await use(new LumaMainPage(page));
-    await context.clearCookies();
   },
-  createAnAccountPage: async ({ page, context }, use) => {
+  createAnAccountPage: async ({ page }, use) => {
     await use(new CreateAnAccountPage(page));
-    await context.clearCookies();
   },
-  menCategoryPage: async ({ page, context }, use) => {
+  menCategoryPage: async ({ page }, use) => {
     await use(new MenCategoryPage(page));
-    await context.clearCookies();
   },
-  checkoutShippingPage: async ({ page, context }, use) => {
+  checkoutShippingPage: async ({ page }, use) => {
     await use(new CheckoutShippingPage(page))
-    await context.clearCookies();
   },
-  checkoutPaymentPage: async ({ page, context }, use) => {
+  checkoutPaymentPage: async ({ page }, use) => {
     await use(new CheckoutReviewAndPaymentPage(page))
-    await context.clearCookies();
   },
-  shoppingCartPage: async ({ page, context }, use) => {
+  shoppingCartPage: async ({ page }, use) => {
     await use(new ShoppingCartPage(page));
-    await context.clearCookies();
   },
-  womenCategoryPage: async ({ page, context }, use) => {
+  womenCategoryPage: async ({ page }, use) => {
     await use(new WomenCategoryPage(page));
-    await context.clearCookies();
-  }
+  },
+  productPage: async ({ page }, use) => {
+    await use(new ProductPage(page));
+  },
 })
+
+test.afterEach(async ({ context }) => {
+  await context.clearCookies();
+});

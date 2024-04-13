@@ -31,7 +31,7 @@ export class LumaMainPage extends BasePage {
 
   public async chooseMenuBarOption(menuBarItem: MenuBar) {
     let menuBarValue = this.page.locator(this.navigationMenuBar, { hasText: new RegExp(`^\\${menuBarItem.valueOf()}\\b$`, 'i') });
-    if (menuBarItem === 'Women' || menuBarItem === 'Men' || menuBarItem === 'Training') {
+    if (menuBarItem === 'Women' || menuBarItem === 'Men' || menuBarItem === 'Training' || menuBarItem === 'Gear') {
       await this.hover(menuBarValue);
     } else {
       await this.clickElement(menuBarValue);
@@ -169,7 +169,7 @@ export class LumaMainPage extends BasePage {
    */
   public async countShoppingCartItems(expectedCount: number) {
     const cartItems = this.page.locator(this.cartItemListLocator);
-    const itemCount = await this.countElement(cartItems);
+    const itemCount = await this.countElements(cartItems);
     expect(itemCount).toBe(expectedCount);
   }
 
@@ -211,7 +211,7 @@ export class LumaMainPage extends BasePage {
    */
   public async handleClientSideValidationErrors(expectedCount: number, inputFieldsLocator: Locator[], options?: ClientSideValiationErrorOptionalParamsInterface) {
     const cliendSideValidationError = this.page.locator(this.clientSideValidationErrorLocator);
-    const validationErrorsCount = await this.countElement(cliendSideValidationError);
+    const validationErrorsCount = await this.countElements(cliendSideValidationError);
     expect(validationErrorsCount).toBe(expectedCount);
     const inputFields = await this.getInputFieldsValues(inputFieldsLocator);
     const emptyFieldIndexes: number[] = [];
@@ -314,8 +314,32 @@ export class LumaMainPage extends BasePage {
     expect(cellInnerText).toBe(expectedCellValue);
   }
 
+  /**
+   * @description generic function to proceed to checkout - every page has this option
+   */
   public async proceedToCheckout() {
     const proceedToCheckoutButton = this.page.getByRole('button', { name: 'Proceed to Checkout' });
     await this.clickElement(proceedToCheckoutButton);
   }
-}
+
+  /**
+   * @description clicks on the desired button from a specific row that contains a specific text on a table
+   */
+  public async clickOnTargetButtonFromSpecificTableRow(tableLocator: string, rowText: string, buttonLocator: (string | Locator)) {
+    const tableRow = this.page.locator(`${tableLocator} tbody tr`, { hasText: rowText });
+    const tableRowButton = tableRow.locator(buttonLocator);
+    await this.clickElement(tableRowButton);
+  }
+
+  public async validateAllTableCellValues(tableLocator: string, rowText: string, expectedCellValues: string[]) {
+    const tableRow = this.page.locator(`${tableLocator} tbody tr`, { hasText: rowText });
+    const tableRowInnerText = await this.getInnerText(tableRow);
+    const tableRowCellValues = tableRowInnerText.split('\n');
+    for (let item of expectedCellValues) {
+      if (!tableRowCellValues.includes(item)) {
+        throw new Error(`one of the expected cell values: ${expectedCellValues} do not exist on table row`)
+      }
+    }
+    expect(tableRowCellValues).toEqual(expectedCellValues);
+  }
+} 
