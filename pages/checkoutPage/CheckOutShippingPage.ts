@@ -55,7 +55,6 @@ export class CheckoutShippingPage extends LumaMainPage {
       await this.fillPostalCode(options?.postalCode!);
       await this.selectCountry(options?.country!);
       await this.fillPhoneNumber(options?.phoneNumber!);
-      await this.chooseShippingMethod(options?.shippingMethod!);
     }
   }
 

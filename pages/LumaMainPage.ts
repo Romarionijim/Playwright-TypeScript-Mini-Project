@@ -325,10 +325,10 @@ export class LumaMainPage extends BasePage {
   /**
    * @description clicks on the desired button from a specific row that contains a specific text on a table
    */
-  public async clickOnTargetButtonFromSpecificTableRow(tableLocator: string, rowText: string, buttonLocator: (string | Locator)) {
-    const tableRow = this.page.locator(`${tableLocator} tbody tr`, { hasText: rowText });
-    const tableRowButton = tableRow.locator(buttonLocator);
-    await this.clickElement(tableRowButton);
+  public async clickOnTargetButtonFromSpecificTableRow(tableLocator: string, rowText: string, buttonLocator: string) {
+    const table = this.page.locator(tableLocator, { hasText: rowText });
+    const tableButton = table.locator(buttonLocator);
+    await this.clickElement(tableButton);
   }
 
   public async validateAllTableCellValues(tableLocator: string, rowText: string, expectedCellValues: string[]) {

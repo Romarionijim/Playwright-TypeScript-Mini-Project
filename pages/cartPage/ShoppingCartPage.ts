@@ -11,10 +11,10 @@ export class ShoppingCartPage extends LumaMainPage {
   private cartItemLocator = '[class="cart item"]';
   private moveToWishListLinkName = 'Move to Wishlist'
   private updateShoppingCartButtonName = 'Update Shopping Cart'
-  private shoppingCartTable = '#shopping-cart-table';
+  private shoppingCartTable = '[class="cart table-wrapper"]';
   private subTotalTableColumn = 'Subtotal';
-  private editCartItemTitle = 'Edit item parameters';
-  private removeItemTitle = 'Remove item';
+  private editCartItemLocator = '[class="action action-edit"]';
+  private removeItemLocator = '[class="action action-delete"]';
   private orderTotalLocator = '.grand.totals .amount';
   itemShoppingPage: ItemShoppingComponentPage;
 
@@ -47,11 +47,10 @@ export class ShoppingCartPage extends LumaMainPage {
   /**
    * @description helper function for modify cart item function
    * @param itemText 
-   * @param buttonTitle 
+   * @param buttonLocator 
    */
-  private async clickOnCartTargetButton(itemText: string, buttonTitle: string) {
-    const targetButton = this.page.getByTitle(buttonTitle);
-    await this.clickOnTargetButtonFromSpecificTableRow(this.shoppingCartTable, itemText, targetButton);
+  private async clickOnCartTargetButton(itemText: string, buttonLocator: string) {
+    await this.clickOnTargetButtonFromSpecificTableRow(this.shoppingCartTable, itemText, buttonLocator);
   }
   /**
    * @description this function clicks on either edit item button or delete an item from cart based on the enum value you choose
@@ -60,10 +59,11 @@ export class ShoppingCartPage extends LumaMainPage {
     try {
       switch (cartAction) {
         case CartActionsEnum.EDIT:
-          await this.clickOnCartTargetButton(itemName, this.editCartItemTitle);
+          await this.clickOnCartTargetButton(itemName, this.editCartItemLocator);
           break;
         case CartActionsEnum.REMOVE:
-          await this.clickOnCartTargetButton(itemName, this.removeItemTitle);
+          await this.clickOnCartTargetButton(itemName, this.removeItemLocator);
+          break;
       }
     } catch (error) {
       throw new Error(`an error occured on function "modifyCartItem": ${error} `)

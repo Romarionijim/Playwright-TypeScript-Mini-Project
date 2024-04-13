@@ -12,12 +12,12 @@ test('test cart functionality behaves as expected', { tag: ['@SANITY'] }, async 
   let jacketSize: string = 'L';
   let cartInitialPrice: string = '$42.00';
   let cartUpdatedPrice: string = '$84.00';
-  let shippingTotalPrice: string = '';
   let itemInStock: string = 'In Stock';
   let updateQty: string = '2';
   let shippingMethod: string = 'Best Way';
   let orderTotal: string = 'Order Total';
   let updatedSize: string = 'XL'
+  let updatedColor: string = 'Black'
   let purchaseConfirmation: string = 'Thank you for your purchase!';
   let expectedUserAddressDetails: string[] = ['John Doe', 'Jump Street 20', 'Miami, Florida 1000 P.O', 'United States', '55555'];
   await test.step('navigaet to mens category, hover over tops and choose hoodies and sweatshirts sub category', async () => {
@@ -38,7 +38,7 @@ test('test cart functionality behaves as expected', { tag: ['@SANITY'] }, async 
   })
   await test.step('validate the item is in stock and change the quantity to 2 then click on update cart', async () => {
     await productPage.validateProductStockAvailability(itemInStock);
-    await productPage.itemShoppingPage.chooseProductItem(jacketName, { modifyQuantity: true, quantity: updateQty, chooseSize: true, size: updatedSize });
+    await productPage.itemShoppingPage.chooseProductItem(jacketName, { modifyQuantity: true, quantity: updateQty, chooseSize: true, size: updatedSize, chooseColor: true, color: updatedColor });
     await productPage.updateCart();
   })
   await test.step('validate price changed after adding another quantity then proceed to checkout', async () => {
@@ -50,7 +50,7 @@ test('test cart functionality behaves as expected', { tag: ['@SANITY'] }, async 
     await checkoutShippingPage.clickNext();
   })
   await test.step('validate cart subtotal then place order and validate order was successfully made', async () => {
-    await checkoutPaymentPage.validateOrderSummaryExpenses(orderTotal, '$114.00');
+    await checkoutPaymentPage.validateOrderSummaryExpenses(orderTotal, cartUpdatedPrice);
     await checkoutPaymentPage.clickPlaceOrder();
     await checkoutPaymentPage.validatePurchaseConfirmationMessage(purchaseConfirmation);
   })

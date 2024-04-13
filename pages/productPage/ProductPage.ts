@@ -12,6 +12,7 @@ export class ProductPage extends LumaMainPage {
   private addToWishListLink = 'Add to Wish List';
   private addToCompareLink = 'Add to Compare';
   private updateCartLocator = '#product-updatecart-button';
+  private availabilityLocator = '[title="Availability"]'
   itemShoppingPage: ItemShoppingComponentPage;
 
   constructor(page: Page) {
@@ -22,11 +23,11 @@ export class ProductPage extends LumaMainPage {
   public async validateProductStockAvailability(expectedStockStatus: string) {
     let producyAvailibility: ProductStockAvailability | undefined;
     const productStock = this.page.locator(this.productInStockLocator);
-    const stockStatus = await productStock.locator('div').getAttribute('class');
+    const stockStatus = await productStock.locator(this.availabilityLocator).getAttribute('class');
     if (stockStatus === 'stock available') {
       producyAvailibility = ProductStockAvailability.IN_STOCK;
     } else {
-      this.productInStockLocator = ProductStockAvailability.OUT_OF_STOCK;
+      producyAvailibility = ProductStockAvailability.OUT_OF_STOCK;
     }
     expect(producyAvailibility).toBe(expectedStockStatus);
   }

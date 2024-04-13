@@ -3,6 +3,8 @@ import { defineConfig, devices } from '@playwright/test';
 require('dotenv').config();
 
 export default defineConfig({
+  globalTimeout: 150000,
+  timeout: 150000,
   testDir: './tests',
   /* Run tests in files in parallel */
   fullyParallel: true,

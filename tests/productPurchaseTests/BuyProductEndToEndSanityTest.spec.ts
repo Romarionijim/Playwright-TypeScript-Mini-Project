@@ -31,7 +31,8 @@ test('Purchase product end to end test', { tag: ['@SANITY'] }, async ({ checkout
     await menCategoryPage.performActionsOnShoppingCart({ clickProceedToCheckout: true })
   })
   await test.step('fill shipping details then click on next', async () => {
-    await checkoutShippingPage.fillShippingDetails({ signIn: true, email: process.env.EMAIL, password: process.env.PASSWORD, expectedUserAddressDetails, shippingMethod });
+    await checkoutShippingPage.fillShippingDetails({ signIn: true, email: process.env.EMAIL, password: process.env.PASSWORD, expectedUserAddressDetails });
+    await checkoutShippingPage.chooseShippingMethod(shippingMethod);
     await checkoutShippingPage.clickNext();
   })
   await test.step('validate cart subtotal - shipping and order total', async () => {

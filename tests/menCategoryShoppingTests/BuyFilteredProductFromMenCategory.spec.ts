@@ -44,9 +44,10 @@ test('purchase product from specific category', { tag: ['@MEN_CATEGORY_SHOPPING'
     await menCategoryPage.performActionsOnShoppingCart({ cartTotalItems: cartQuantity, clickProceedToCheckout: true })
   })
   await test.step('fill shipping details, choose shipping method and click on next for payment address validation', async () => {
-    await checkoutShippingPage.fillShippingDetails({ email, firstname, lastname, country, company, streetFieldIndex: streetFieldIndex, streetAddress, city, state, postalCode, phoneNumber, shippingMethod });
+    await checkoutShippingPage.fillShippingDetails({ email, firstname, lastname, country, company, streetFieldIndex: streetFieldIndex, streetAddress, city, state, postalCode, phoneNumber });
+    await checkoutShippingPage.chooseShippingMethod(shippingMethod);
     await checkoutShippingPage.clickNext();
-    await checkoutPaymentPage.validateBillingAndShippingDetails([`${firstname} ${lastname}`, streetAddress,  `${city}, ${state} ${postalCode}`, country, phoneNumber])
+    await checkoutPaymentPage.validateBillingAndShippingDetails([`${firstname} ${lastname}`, streetAddress, `${city}, ${state} ${postalCode}`, country, phoneNumber])
   })
   await test.step('place order and validate order was successful', async () => {
     await checkoutPaymentPage.clickPlaceOrder();
