@@ -1,7 +1,19 @@
 import { expect } from "@playwright/test";
 import { LumaMainPage } from "../LumaMainPage";
-import { UserShippingDetailsParams } from "../../helpers/optionalParamsInterfaces/OptionalParams";
 
+export interface UserShippingDetailsParams {
+  company?: string,
+  streetAddress?: string,
+  streetFieldIndex?: number,
+  city?: string,
+  state?: string,
+  postalCode?: string,
+  country?: string,
+  phoneNumber?: string,
+  shippingMethod?: string,
+  firstname?: string,
+  lastname?: string
+}
 
 export class CheckoutShippingPage extends LumaMainPage {
   private emailFieldLocator = '#customer-email-fieldset #customer-email';
@@ -103,7 +115,6 @@ export class CheckoutShippingPage extends LumaMainPage {
     await this.clickElement(signInButton);
     await this.fillText(this.signinEmailAddressLocator, email);
     await this.fillText(this.signinPasswordLocator, password);
-    const lastButon = this.page.locator('button', { hasText: 'Sign In' })
     await this.clickElement(signInButton.nth(1));
   }
 

@@ -60,7 +60,6 @@ export class LumaMainPage extends BasePage {
 
   public async clickOnShoppingCart() {
     await this.clickElement(this.numberOfCartItemsQuantityLocator);
-
   }
 
   /**

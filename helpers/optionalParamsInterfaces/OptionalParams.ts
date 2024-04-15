@@ -33,17 +33,3 @@ export interface ClientSideValiationErrorOptionalParamsInterface {
   validationErrorsIndexes?: number[],
   validationErrorTextList?: string[],
 }
-
-export interface UserShippingDetailsParams {
-  company?: string,
-  streetAddress?: string,
-  streetFieldIndex?: number,
-  city?: string,
-  state?: string,
-  postalCode?: string,
-  country?: string,
-  phoneNumber?: string,
-  shippingMethod?: string,
-  firstname?: string,
-  lastname?: string
-}
