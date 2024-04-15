@@ -17,7 +17,7 @@ export class CheckoutReviewAndPaymentPage extends LumaMainPage {
   public async validateBillingAndShippingDetails(billingShippingDetails: string[]) {
     const shippingDetailsInnerText = await this.getInnerText(this.billingAddressDetailsLocator);
     const shippingDetailsList = shippingDetailsInnerText.split('\n')
-    shippingDetailsList.splice(shippingDetailsList.indexOf('edit'), 5);
+    shippingDetailsList.splice(shippingDetailsList.indexOf('edit'), 1);
     expect(shippingDetailsList).toEqual(billingShippingDetails);
   }
 
