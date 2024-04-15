@@ -34,7 +34,6 @@ export interface ClientSideValiationErrorOptionalParamsInterface {
   validationErrorTextList?: string[],
 }
 
-
 export interface UserShippingDetailsParams {
   company?: string,
   streetAddress?: string,

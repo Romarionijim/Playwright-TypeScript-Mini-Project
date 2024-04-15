@@ -236,7 +236,6 @@ export class LumaMainPage extends BasePage {
     }
     expect(validationErrorNthIndex).toEqual(options?.validationErrorsIndexes);
     expect(validationErrorTextList).toEqual(options?.validationErrorTextList);
-
   }
 
   public async getInputFieldsValues(inputFields: Locator[]) {

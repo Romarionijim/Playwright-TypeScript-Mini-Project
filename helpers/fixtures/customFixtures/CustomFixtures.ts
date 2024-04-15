@@ -27,13 +27,13 @@ type MyFixtures = {
  * @description custom fixtures to promote reusability and prevent repeating same workflows in each test file
  */
 export const test = base.extend<MyFixtures>({
-  loadAppAndLogin: async ({ page, context }, use) => {
+  loadAppAndLogin: async ({ page }, use) => {
     let loginPage = new LoginPage(page);
     await loginPage.loadApp();
     await loginPage.login();
     await use(loginPage);
   },
-  loadApplication: async ({ page, context }, use) => {
+  loadApplication: async ({ page }, use) => {
     let lumaMainPage = new LumaMainPage(page);
     await lumaMainPage.loadApp();
     await use(lumaMainPage);

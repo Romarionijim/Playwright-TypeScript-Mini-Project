@@ -19,7 +19,8 @@ export class ItemShoppingComponentPage extends BasePage {
   /**
    * @description function to choose a product item with flexible options to choose from
    * @param productName 
-   * @param options represents the optional param interface with flexible options to choose a product item with the conditions that you choos
+   * @param options represents the optional param interface with flexible options to choose a product item with the
+   * attributes that you choose
    * in the test
    */
   public async chooseProductItem(productName: string, options?: ProductItemOptionalParamsInterface) {
