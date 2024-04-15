@@ -24,7 +24,7 @@ export class ItemShoppingComponentPage extends BasePage {
    * in the test
    */
   public async chooseProductItem(productName: string, options?: ProductItemOptionalParamsInterface) {
-    const productItem = await this.deterimeItemScope(productName);
+    const productItem = await this.getProductItemScopeLocator(productName);
     await this.hover(productItem);
     try {
       if (options?.chooseSize && options.size !== undefined) {
@@ -81,7 +81,7 @@ export class ItemShoppingComponentPage extends BasePage {
    * @param itemText 
    * @returns 
    */
-  private async deterimeItemScope(itemText: string) {
+  private async getProductItemScopeLocator(itemText: string) {
     let itemLocator: Locator | undefined;
     let currentPageUrl = await this.getPageUrl();
     if (currentPageUrl.includes('cart')) {

@@ -5,6 +5,7 @@ import { CartActionsOptionalParamsInterface, ClientSideValiationErrorOptionalPar
 import { MenuBarCategories } from "../common/navigationEnums/menuBarCategories/MenuBarCategories";
 import { MenuBarSubCategories } from "../common/navigationEnums/menuBarSubCategories/MenuBarSubCategories";
 import { ItemShoppingComponentPage } from "./pageComponents/productShoppingComponent/ItemShoppingPage";
+import { AccountHeaderOptions } from "../common/accountHeader/AccountHeaderOptions";
 
 export class LumaMainPage extends BasePage {
   private searchBoxLocator = '#search';
@@ -28,6 +29,8 @@ export class LumaMainPage extends BasePage {
   protected pageMessageCaptionLocator = '[class="page messages"]'
   private navigationMenuBar = '.navigation a';
   private dialogFooterLocator = '[class="modal-footer"]';
+  private loggedInAttributeLocator = '.logged-in';
+  private accountDownArrowButtonLocator = '[class="panel header"] .customer-welcome'
 
   public async chooseMenuBarOption(menuBarItem: MenuBar) {
     let menuBarValue = this.page.locator(this.navigationMenuBar, { hasText: new RegExp(`^\\${menuBarItem.valueOf()}\\b$`, 'i') });
@@ -339,5 +342,18 @@ export class LumaMainPage extends BasePage {
       }
     }
     expect(tableRowCellValues).toEqual(expectedCellValues);
+  }
+
+  /**
+   * @description clicks on the logged in user account header down arrow button and chooses one of the options - my account, my wish list and sign out
+   */
+  public async clickAndChooseAccountOption(accountHeaderOption: AccountHeaderOptions) {
+    const userGreet = this.page.locator(this.userWelcomeCaptionLocator);
+    if (await userGreet.isVisible()) {
+      await this.clickElement(this.accountDownArrowButtonLocator);
+      await this.clickOnLink(accountHeaderOption.valueOf());
+    } else {
+      throw new Error(`user may be signed out and therefore the account options are not available`)
+    }
   }
 } 
