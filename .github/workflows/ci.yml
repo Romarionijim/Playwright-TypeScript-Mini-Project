@@ -42,7 +42,9 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
-      run: BASE_URL=${{ inputs.base_url }} npx playwright test --grep ${{ matrix.greps }} --project=${{ inputs.browser }}
+      env:
+        BASE_URL: ${{ inputs.base_url }}
+      run: npx playwright test --grep ${{ matrix.greps }} --project=${{ inputs.browser }}
     - uses: actions/upload-artifact@v4
       if: always()
       with:
