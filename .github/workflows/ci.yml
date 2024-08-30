@@ -1,14 +1,29 @@
 name: ci pipeline
 on:
-  workflow_dispatch:
+
 #   push:
 #     branches: 
 #       - "*"
-#   pull_request:
-#     branches: [ main, master ]
+
+  pull_request:
+    branches: [ main, master ]
+
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: web url input
+        required: false
+        default: 'https://magento.softwaretestingboard.com/'
+
+      browser:
+        description: web browser to run tests on
+        required: false 
+        default: 'chromium'
+
 env:
   EMAIL: ${{ secrets.EMAIL }}
   PASSWORD: ${{ secrets.PASSWORD }}
+
 jobs:
   test:
     timeout-minutes: 60
@@ -16,8 +31,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        base_urls: ['https://magento.softwaretestingboard.com/']
-        browsers: ['chromium']
         greps: ['@LOGIN', '@SIGN_UP', '@SANITY', '@MEN_CATEGORY_SHOP']
     steps:
     - uses: actions/checkout@v4
@@ -29,11 +42,11 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
-      run: BASE_URL=${{ matrix.base_urls }} npx playwright test --grep ${{ matrix.greps }} --project=${{ matrix.browsers }}
+      run: BASE_URL=${{ inputs.base_url }} npx playwright test --grep ${{ matrix.greps }} --project=${{ inputs.browser }}
     - uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: playwright-report-${{matrix.greps}}-${{ matrix.browsers }}
+        name: playwright-report-${{matrix.greps}}-${{ inputs.browser }}
         path: playwright-report/
         retention-days: 30
     - name: Deploy Playwright report to GitHub Pages
@@ -41,3 +54,26 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: playwright-report/
+
+  status_checks:
+    name: E2E status checks
+    needs: test 
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: determine status check conclusion
+        id: status-check-status
+        run: |
+          if [[ "${{ needs.test.result == 'failure' }}" ]]; then
+            echo "status=failure" >> $GITHUB_OUTPUT
+          else
+            echo "status=success" >> $GITHUB_OUTPUT
+          fi
+      - name: set pr status checks
+        uses: teamniteo/pull_request_status_action@v1.0.0
+        with:
+          pr_number: ${{ github.event.pull_request.number }}
+          state: ${{ steps.status-check-status.outputs.status }}
+          repository: Romarionijim/Playwright-TypeScript-Mini-Project
+        env:
+          GITHUB_TOKEN:  ${{ secrets.GITHUB_TOKEN }}
