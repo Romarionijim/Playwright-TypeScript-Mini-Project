@@ -50,7 +50,7 @@ jobs:
   status_checks:
     name: E2E status checks
     runs-on: ubuntu-latest
-    if: always()
+    if: ${{ github.event_name == 'pull_request' }}
     needs: test 
     steps:
       - name: determine status check conclusion
