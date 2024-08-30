@@ -1,6 +1,6 @@
 import { Page, expect } from "@playwright/test";
-import { LumaMainPage } from "../LumaMainPage";
-import { ItemShoppingComponentPage } from "../pageComponents/productShoppingComponent/ItemShoppingPage";
+import { LumaMainPage } from "@pages";
+import { ItemShoppingComponentPage } from "@pages";
 
 export enum CartActionsEnum {
   EDIT = 'Edit',

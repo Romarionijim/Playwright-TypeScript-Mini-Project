@@ -1,4 +1,4 @@
-import { LumaMainPage } from "../LumaMainPage";
+import { LumaMainPage } from "@pages";
 import { ClientSideValiationErrorOptionalParamsInterface } from "../../helpers/optionalParamsInterfaces/OptionalParams";
 
 export class LoginPage extends LumaMainPage {

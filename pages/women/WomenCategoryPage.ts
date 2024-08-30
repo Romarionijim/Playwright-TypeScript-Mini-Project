@@ -1,7 +1,7 @@
 import { Page } from "@playwright/test";
-import { LumaMainPage } from "../LumaMainPage";
-import { ItemShoppingComponentPage } from "../pageComponents/productShoppingComponent/ItemShoppingPage";
-import { SideBarShoppingComponentPage } from "../pageComponents/sidebarShoppingComponent/SideBarShoppingComponentPage";
+import { LumaMainPage } from "@pages";
+import { ItemShoppingComponentPage } from "@pages";
+import { SideBarShoppingComponentPage } from "@pages";
 
 export class WomenCategoryPage extends LumaMainPage {
   itemShoppingComponent: ItemShoppingComponentPage;

@@ -1,11 +1,10 @@
 import { Locator, Page, expect } from "@playwright/test";
-import { MenuBar } from "../common/navigationEnums/menuBar/MenuBarEnum";
-import { BasePage } from "./BasePage";
-import { CartActionsOptionalParamsInterface, ClientSideValiationErrorOptionalParamsInterface } from "../helpers/optionalParamsInterfaces/OptionalParams";
-import { MenuBarCategories } from "../common/navigationEnums/menuBarCategories/MenuBarCategories";
-import { MenuBarSubCategories } from "../common/navigationEnums/menuBarSubCategories/MenuBarSubCategories";
-import { ItemShoppingComponentPage } from "./pageComponents/productShoppingComponent/ItemShoppingPage";
-import { AccountHeaderOptions } from "../common/accountHeader/AccountHeaderOptions";
+import { MenuBar } from "@common";
+import { BasePage } from "@pages";
+import { CartActionsOptionalParamsInterface, ClientSideValiationErrorOptionalParamsInterface } from "@helpers";
+import { MenuBarCategories } from "@common";
+import { MenuBarSubCategories } from "@common";
+import { AccountHeaderOptions } from "@common";
 
 export class LumaMainPage extends BasePage {
   private searchBoxLocator = '#search';

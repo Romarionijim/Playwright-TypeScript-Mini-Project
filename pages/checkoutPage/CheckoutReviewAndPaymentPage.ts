@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { LumaMainPage } from "../LumaMainPage";
+import { LumaMainPage } from "@pages";
 
 export class CheckoutReviewAndPaymentPage extends LumaMainPage {
   private billingAddressDetailsLocator = '[class="billing-address-details"]'
@@ -10,7 +10,7 @@ export class CheckoutReviewAndPaymentPage extends LumaMainPage {
     try {
       await this.changeCheckBoxState(confirmationLabel);
     } catch (error) {
-      throw new Error(error)
+      throw new Error(`error was detected when confirming billig and shipping address: ${error}`)
     }
   }
 

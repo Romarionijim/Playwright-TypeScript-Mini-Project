@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
-import { SideBarShoppingItemListEnum } from "../../../common/componentEnums/SideBarShoppingItemListEnum";
-import { SideBarShoppingOptionsEnum } from "../../../common/componentEnums/SideBarShoppingOptionsEnum";
-import { BasePage } from "../../BasePage";
+import { SideBarShoppingItemListEnum } from "@common";
+import { SideBarShoppingOptionsEnum } from "@common";
+import { BasePage } from "@pages";
 
 export class SideBarShoppingComponentPage extends BasePage {
   private sideBarShoppingOptionsWrapperLocator = '[class="sidebar sidebar-main"]';

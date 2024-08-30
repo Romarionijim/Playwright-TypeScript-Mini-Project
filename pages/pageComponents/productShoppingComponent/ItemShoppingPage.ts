@@ -1,7 +1,6 @@
 import { Locator, expect } from "@playwright/test";
-import { LumaMainPage } from "../../LumaMainPage";
-import { ProductItemOptionalParamsInterface } from "../../../helpers/optionalParamsInterfaces/OptionalParams";
-import { BasePage } from "../../BasePage";
+import { ProductItemOptionalParamsInterface } from "@helpers";
+import { BasePage } from "@pages";
 
 /**
  * @description this class is a composed common class when shopping for an item such as choosing item size, color, 

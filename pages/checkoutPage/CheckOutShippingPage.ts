@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { LumaMainPage } from "../LumaMainPage";
+import { LumaMainPage } from "@pages";
 
 export interface UserShippingDetailsParams {
   company?: string,
