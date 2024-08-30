@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test'
-import { AccountHeaderOptions } from '../../common/accountHeader/AccountHeaderOptions'
-import { test } from '../../helpers/fixtures/customFixtures/CustomFixtures'
+import { AccountHeaderOptions } from '@common'
+import { test } from '@helpers'
 
 test('logout basic test', { tag: ['@LOGIN'] }, async ({ loadAppAndLogin, loginPage }) => {
   let user: string = 'John Doe'

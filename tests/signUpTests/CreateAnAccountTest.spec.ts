@@ -1,5 +1,5 @@
-import { test } from '../../helpers/fixtures/customFixtures/CustomFixtures'
-import Randomizer from '../../helpers/faker/FakeDataRandomizer';
+import { test } from '@helpers';
+import { Randomizer } from '@helpers';
 
 
 test('sign upand create new user account for luma shopping website', { tag: ['@SIGN_UP'] }, async ({ loadApplication, createAnAccountPage }) => {

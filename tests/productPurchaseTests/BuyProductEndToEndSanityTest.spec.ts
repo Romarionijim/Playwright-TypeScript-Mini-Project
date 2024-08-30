@@ -1,7 +1,7 @@
-import { MenuBar } from '../../common/navigationEnums/menuBar/MenuBarEnum'
-import { MenuBarCategories } from '../../common/navigationEnums/menuBarCategories/MenuBarCategories';
-import { MenuBarSubCategories } from '../../common/navigationEnums/menuBarSubCategories/MenuBarSubCategories';
-import { test } from '../../helpers/fixtures/customFixtures/CustomFixtures'
+import { MenuBar } from '@common'
+import { MenuBarCategories } from '@common';
+import { MenuBarSubCategories } from '@common';
+import { test } from '@helpers'
 
 test('Purchase product end to end test', { tag: ['@SANITY'] }, async ({ checkoutShippingPage, checkoutPaymentPage, menCategoryPage }) => {
   let productName: string = 'Proteus Fitness Jackshirt';

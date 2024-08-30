@@ -1,4 +1,4 @@
-import { test } from '../../helpers/fixtures/customFixtures/CustomFixtures'
+import { test } from '@helpers'
 
 let clientSideValidationErrorsCount: number
 let zeroBasedIndex: number;

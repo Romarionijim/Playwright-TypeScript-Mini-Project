@@ -1,10 +1,10 @@
-import { SideBarShoppingItemListEnum } from '../../common/componentEnums/SideBarShoppingItemListEnum'
-import { SideBarShoppingOptionsEnum } from '../../common/componentEnums/SideBarShoppingOptionsEnum'
-import { MenuBar } from '../../common/navigationEnums/menuBar/MenuBarEnum'
-import { MenuBarCategories } from '../../common/navigationEnums/menuBarCategories/MenuBarCategories'
-import { MenuBarSubCategories } from '../../common/navigationEnums/menuBarSubCategories/MenuBarSubCategories'
-import Randomizer from '../../helpers/faker/FakeDataRandomizer'
-import { test } from '../../helpers/fixtures/customFixtures/CustomFixtures'
+import { SideBarShoppingItemListEnum } from '@common'
+import { SideBarShoppingOptionsEnum } from '@common'
+import { MenuBar } from '@common'
+import { MenuBarCategories } from '@common'
+import { MenuBarSubCategories } from '@common'
+import { Randomizer } from '@helpers'
+import { test } from '@helpers'
 
 test('purchase product from specific category', { tag: ['@MEN_CATEGORY_SHOPPING'] }, async ({ loadApplication, menCategoryPage, checkoutShippingPage, checkoutPaymentPage }) => {
   let jacketPageTitle: string = 'Jackets';

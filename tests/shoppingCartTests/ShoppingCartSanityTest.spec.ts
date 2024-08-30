@@ -1,10 +1,10 @@
-import { SideBarShoppingItemListEnum } from '../../common/componentEnums/SideBarShoppingItemListEnum';
-import { SideBarShoppingOptionsEnum } from '../../common/componentEnums/SideBarShoppingOptionsEnum';
-import { MenuBar } from '../../common/navigationEnums/menuBar/MenuBarEnum'
-import { MenuBarCategories } from '../../common/navigationEnums/menuBarCategories/MenuBarCategories';
-import { MenuBarSubCategories } from '../../common/navigationEnums/menuBarSubCategories/MenuBarSubCategories';
-import { test } from '../../helpers/fixtures/customFixtures/CustomFixtures'
-import { CartActionsEnum } from '../../pages/cartPage/ShoppingCartPage';
+import { SideBarShoppingItemListEnum } from '@common';
+import { SideBarShoppingOptionsEnum } from '@common';
+import { MenuBar } from '@common';
+import { MenuBarCategories } from '@common';
+import { MenuBarSubCategories } from '@common';
+import { test } from '@helpers';
+import { CartActionsEnum } from '@pages';
 
 test('test cart functionality behaves as expected', { tag: ['@SANITY'] }, async ({ loadApplication, shoppingCartPage, productPage, womenCategoryPage, checkoutShippingPage, checkoutPaymentPage }) => {
   let jacketName: string = 'Stark Fundamental Hoodie';
