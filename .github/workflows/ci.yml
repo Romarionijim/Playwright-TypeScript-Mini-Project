@@ -18,7 +18,7 @@ on:
       browser:
         description: web browser to run tests on
         required: false 
-        default: 'chromium'
+        default: chromium
 
 env:
   EMAIL: ${{ secrets.EMAIL }}
