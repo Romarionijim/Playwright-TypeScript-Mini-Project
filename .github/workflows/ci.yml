@@ -18,11 +18,13 @@ on:
       browser:
         description: web browser to run tests on
         required: false 
-        default: chromium
+        default: 'chromium'
 
 env:
   EMAIL: ${{ secrets.EMAIL }}
   PASSWORD: ${{ secrets.PASSWORD }}
+  BROWSER: ${{ inputs.browser }}
+  BASE_URL: ${{ inputs.base_url }}
 
 jobs:
   test:
@@ -42,13 +44,11 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
-      env:
-        BASE_URL: ${{ inputs.base_url }}
-      run: npx playwright test --grep ${{ matrix.greps }} --project=${{ inputs.browser }}
+      run: BASE_URL=${{ env.BASE_URL }} npx playwright test --grep ${{ matrix.greps }} --project=${{ env.BROWSER }}
     - uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: playwright-report-${{matrix.greps}}-${{ inputs.browser }}
+        name: playwright-report-${{matrix.greps}}-${{ env.BROWSER }}
         path: playwright-report/
         retention-days: 30
     - name: Deploy Playwright report to GitHub Pages
@@ -59,9 +59,9 @@ jobs:
 
   status_checks:
     name: E2E status checks
-    needs: test 
     runs-on: ubuntu-latest
     if: always()
+    needs: test 
     steps:
       - name: determine status check conclusion
         id: status-check-status
