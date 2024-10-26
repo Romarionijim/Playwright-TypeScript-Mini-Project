@@ -9,7 +9,7 @@ import { ShoppingCartPage } from '../../../pages/cartPage/ShoppingCartPage';
 import { WomenCategoryPage } from '../../../pages/women/WomenCategoryPage';
 import { ProductPage } from '../../../pages/productPage/ProductPage';
 
-type MyFixtures = {
+type TestFixtures = {
   loginPage: LoginPage;
   loadAppAndLogin: LoginPage;
   lumaMainPage: LumaMainPage;
@@ -26,7 +26,7 @@ type MyFixtures = {
 /**
  * @description custom fixtures to promote reusability and prevent repeating same workflows in each test file
  */
-export const test = base.extend<MyFixtures>({
+export const test = base.extend<TestFixtures>({
   loadAppAndLogin: async ({ page }, use) => {
     let loginPage = new LoginPage(page);
     await loginPage.loadApp();

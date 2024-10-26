@@ -45,7 +45,13 @@ export class CheckoutShippingPage extends LumaMainPage {
    * @param shippingMethod 
    * @param options 
    */
-  public async fillShippingDetails(options?: { signIn?: boolean, email?: string, password?: string, expectedUserAddressDetails?: string[] } & UserShippingDetailsParams) {
+  public async fillShippingDetails(
+    options?: {
+      signIn?: boolean,
+      email?: string,
+      password?: string,
+      expectedUserAddressDetails?: string[]
+    } & UserShippingDetailsParams) {
     if (options?.signIn && options.email !== undefined && options.password !== undefined) {
       await this.signIn(options.email, options.password)
       await this.page.waitForTimeout(2500);

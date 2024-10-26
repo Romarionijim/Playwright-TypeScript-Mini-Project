@@ -45,7 +45,14 @@ export class CreateAnAccountPage extends LumaMainPage {
     await this.clickElement(createAccountSubmitButton);
   }
 
-  public async createNewCustomerAccount(firstname: string, lastname: string, email: string, passwordStrengh: string, registerConfirmationText: string, password: string = process.env.PASSWORD as string) {
+  public async createNewCustomerAccount(
+    firstname: string,
+    lastname: string,
+    email: string,
+    passwordStrengh: string,
+    registerConfirmationText: string,
+    password: string = process.env.PASSWORD as string
+  ) {
     await this.clickCreateAccount();
     await this.fillFirstName(firstname);
     await this.fillLastName(lastname);

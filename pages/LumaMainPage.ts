@@ -117,8 +117,8 @@ export class LumaMainPage extends BasePage {
   }
 
   private async validateCartSubTotalPrice(expectedSubTotalPrice: string) {
-    const cartSubTotalPriceInnerText = await this.page.locator(this.cartSubtotalPrice).innerText();
-    expect(cartSubTotalPriceInnerText.trim()).toBe(expectedSubTotalPrice);
+    const cartSubTotalPriceInnerText = await this.getInnerText(this.cartSubtotalPrice);
+    expect(cartSubTotalPriceInnerText).toBe(expectedSubTotalPrice);
   }
 
   private async modifyCartItemQuantity(itemText: string, itemQuantity: string) {
@@ -210,7 +210,11 @@ export class LumaMainPage extends BasePage {
    * @param inputFieldsLocator 
    * @param options 
    */
-  public async handleClientSideValidationErrors(expectedCount: number, inputFieldsLocator: Locator[], options?: ClientSideValiationErrorOptionalParamsInterface) {
+  public async handleClientSideValidationErrors(
+    expectedCount: number,
+    inputFieldsLocator: Locator[],
+    options?: ClientSideValiationErrorOptionalParamsInterface
+  ) {
     const cliendSideValidationError = this.page.locator(this.clientSideValidationErrorLocator);
     const validationErrorsCount = await this.countElements(cliendSideValidationError);
     expect(validationErrorsCount).toBe(expectedCount);

@@ -50,7 +50,7 @@ export class BasePage {
     }
   }
 
-  public async loadApp(url: (string | undefined) = process.env.BASE_URL) {
+  public async loadApp(url = process.env.BASE_URL as string) {
     if (url !== undefined) {
       await this.page.goto(url);
     } else {
@@ -121,7 +121,7 @@ export class BasePage {
    * @description applies to every button that has the type of submit e.g "<button type=submit></button>""
    */
   public async clickOnButtonWithRole(buttonName: string) {
-    const submitButton = this.page.getByRole('button', { name: new RegExp(`^\\${buttonName}\\b$`, 'i') });
+    const submitButton = this.page.getByRole('button', { name: buttonName, exact: true });
     await this.clickElement(submitButton);
   }
 }

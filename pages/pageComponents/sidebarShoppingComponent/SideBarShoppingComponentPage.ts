@@ -20,8 +20,19 @@ export class SideBarShoppingComponentPage extends BasePage {
   /**
    * @description validates the filtered by options if we added filters to the product that we want to purchase
    */
-  public async validateFilteredOptions(expectedFilterList: string[]) {
+  public async validateFilteredOptions(expectedFilterList: string | string[]) {
+    const listOfFilteredItems: string[] = [];
     const filteredByItems = this.page.locator(this.filteredByItemsLocator)
-    await expect(filteredByItems).toContainText(expectedFilterList);
+    const filteredItemsCount = await this.countElements(filteredByItems);
+    if (filteredItemsCount > 1) {
+      const filteredItemsList = await filteredByItems.all();
+      for (let item of filteredItemsList) {
+        const itemText = await this.getInnerText(item);
+        listOfFilteredItems.push(itemText);
+      }
+      expect(listOfFilteredItems).toEqual(expectedFilterList);
+    } else {
+      await expect(filteredByItems).toContainText(expectedFilterList);
+    }
   }
 }

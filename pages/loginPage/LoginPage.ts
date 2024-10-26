@@ -16,7 +16,7 @@ export class LoginPage extends LumaMainPage {
       await this.fillText(passwordField, password);
       const signInButton = this.page.getByRole('button', { name: 'Sign In' });
       await this.clickElement(signInButton);
-      await this.page.waitForTimeout(2500);
+      await this.page.waitForTimeout(3500);
     }
     if (options?.negativeTest && options.expectedErrorCount !== undefined) {
       await this.handleClientSideValidationErrors(options.expectedErrorCount, [emailField, passwordField], options)
