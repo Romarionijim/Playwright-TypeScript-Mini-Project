@@ -30,6 +30,8 @@ export class LumaMainPage extends BasePage {
   private dialogFooterLocator = '[class="modal-footer"]';
   private loggedInAttributeLocator = '.logged-in';
   private accountDownArrowButtonLocator = '[class="panel header"] .customer-welcome'
+  protected searchBarLocator = '#search';
+  private searchResultList = '#search_autocomplete';
 
   public async chooseMenuBarOption(menuBarItem: MenuBar) {
     let menuBarValue = this.page.locator(this.navigationMenuBar, { hasText: new RegExp(`^\\${menuBarItem.valueOf()}\\b$`, 'i') });
@@ -357,6 +359,21 @@ export class LumaMainPage extends BasePage {
       await this.clickOnLink(accountHeaderOption.valueOf());
     } else {
       throw new Error(`user may be signed out and therefore the account options are not available`)
+    }
+  }
+
+  public async searchFor(item: string, options?: { pressEnter?: boolean }) {
+    const searchBar = this.page.locator(this.searchBarLocator);
+    await this.fillText(searchBar, item);
+    if (options?.pressEnter) {
+      await this.pressEnter();
+      return;
+    }
+    const searchResults = this.page.locator(this.searchResultList);
+    const searchResultVisiblity = await searchResults.isVisible();
+    if (searchResultVisiblity) {
+      const searchResultListItems = this.page.locator(this.searchResultList).locator('li');
+      await this.clickAndChooseFromDropdownByText(this.searchBarLocator, searchResultListItems, item);
     }
   }
 } 
