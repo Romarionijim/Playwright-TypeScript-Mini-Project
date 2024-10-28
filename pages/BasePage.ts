@@ -124,4 +124,22 @@ export class BasePage {
     const submitButton = this.page.getByRole('button', { name: buttonName, exact: true });
     await this.clickElement(submitButton);
   }
+
+  public async clickAndChooseFromDropdownByText(
+    dropdownLocator: (string | Locator),
+    dropdownList: Locator,
+    dropdownItemText: string,
+  ) {
+    await this.clickElement(dropdownLocator);
+    await this.page.waitForTimeout(2000);
+    const dropDownList = await dropdownList.all();
+    for (let item of dropDownList) {
+      const itemText = await this.getInnerText(item);
+      if (itemText === dropdownItemText) {
+        await item.click();
+        return;
+      }
+    }
+    throw new Error(`the item ${dropdownItemText} does not exist in dropdown!`);
+  }
 }
