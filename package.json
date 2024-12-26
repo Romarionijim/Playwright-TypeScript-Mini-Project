@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npx playwright test --project='chromium' --workers 1",
+    "test": "export HEADLESS='false' && npx playwright test --project='chromium' --workers 1",
+    "test:headless": "export HEADLESS='true' && npx playwright test --project='chromium' --workers 1",
     "build": "tsc -p tsconfig.json --noEmit",
     "test:changed": "npx playwright test --project='chromium' --only-changed --workers 1",
     "ui-mode": "npx playwright test --ui",

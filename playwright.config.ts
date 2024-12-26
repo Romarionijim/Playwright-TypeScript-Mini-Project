@@ -26,7 +26,7 @@ export default defineConfig({
     video: 'retain-on-failure',
     screenshot: 'on',
     launchOptions: {
-      headless: process.env.CI ? true : false,
+      headless: process.env.HEADLESS === 'false' ? false : true,
       slowMo: 500,
     },
     viewport: { 'width': 1400, 'height': 900 },
