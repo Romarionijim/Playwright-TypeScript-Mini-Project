@@ -1,13 +1,13 @@
 import { test as base } from '@playwright/test';
-import { LoginPage } from '../../../pages/loginPage/LoginPage';
-import { LumaMainPage } from '../../../pages/LumaMainPage';
-import { CreateAnAccountPage } from '../../../pages/createNewAccountPage/CreateAnAccountPage';
-import { MenCategoryPage } from '../../../pages/men/MenCategoryPage';
-import { CheckoutShippingPage } from '../../../pages/checkoutPage/CheckOutShippingPage';
-import { CheckoutReviewAndPaymentPage } from '../../../pages/checkoutPage/CheckoutReviewAndPaymentPage';
-import { ShoppingCartPage } from '../../../pages/cartPage/ShoppingCartPage';
-import { WomenCategoryPage } from '../../../pages/women/WomenCategoryPage';
-import { ProductPage } from '../../../pages/productPage/ProductPage';
+import { LoginPage } from '../../../pages/login-page/login.page';
+import { LumaMainPage } from '../../../pages/luma-main.page';
+import { CreateAnAccountPage } from '../../../pages/create-new-account-page/create-new-account.page';
+import { MenCategoryPage } from '../../../pages/men-category/men-category.page';
+import { CheckoutShippingPage } from '../../../pages/checkout-page/checkout-shipping.page';
+import { CheckoutReviewAndPaymentPage } from '../../../pages/checkout-page/checkout-review-and-payment.page';
+import { ShoppingCartPage } from '../../../pages/cart-page/shopping-cart.page';
+import { WomenCategoryPage } from '../../../pages/women-category/women-category.page';
+import { ProductPage } from '../../../pages/product-page/product.page';
 
 type TestFixtures = {
   loginPage: LoginPage;

@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-export class Randomizer {
+export class MockGenerator {
 
     public static getRandomFirstName(): string {
         return faker.person.firstName();
