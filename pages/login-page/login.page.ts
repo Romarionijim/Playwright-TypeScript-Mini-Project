@@ -1,12 +1,12 @@
 import { LumaMainPage } from "@pages";
-import { ClientSideValiationErrorOptionalParamsInterface } from "../../helpers/optionalParamsInterfaces/OptionalParams";
+import { ClientSideValidationErrorOptionalParamsInterface } from "../../helpers/types/optional-params.types";
 
 export class LoginPage extends LumaMainPage {
   private emailFieldLocator = '[name="login[username]"]';
   private passwordFieldLocator = '[name="login[password]"]';
 
   public async login(email: string = process.env.EMAIL as string, password: string = process.env.PASSWORD as string,
-    options?: ClientSideValiationErrorOptionalParamsInterface & { negativeTest?: boolean, expectedErrorCount?: number }) {
+    options?: ClientSideValidationErrorOptionalParamsInterface & { negativeTest?: boolean, expectedErrorCount?: number }) {
     const emailField = this.page.locator(this.emailFieldLocator);
     const passwordField = this.page.locator(this.passwordFieldLocator);
     const loggedInState = await this.getLoggedInState();

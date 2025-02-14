@@ -20,9 +20,9 @@ export class BasePage {
     }
   }
 
-  public async clickElement(locator: (string | Locator)) {
+  public async clickElement(locator: (string | Locator), force: boolean = true) {
     const locatorElement = await this.getTypeOfLocator(locator);
-    await locatorElement.click({ force: true });
+    await locatorElement.click({ force });
   }
 
   public async fillText(locator: (string | Locator), text: string) {
@@ -141,5 +141,14 @@ export class BasePage {
       }
     }
     throw new Error(`the item ${dropdownItemText} does not exist in dropdown!`);
+  }
+
+  public async getElementVisibility(locator: (string | Locator)) {
+    const locatorElement = await this.getTypeOfLocator(locator);
+    return locatorElement.isVisible();
+  }
+
+  public async waitForElementVisibility(locator: (string | Locator)) {
+
   }
 }

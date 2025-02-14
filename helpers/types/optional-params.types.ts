@@ -26,7 +26,7 @@ export interface ProductItemOptionalParamsInterface {
   quantity?: string,
 }
 
-export interface ClientSideValiationErrorOptionalParamsInterface {
+export interface ClientSideValidationErrorOptionalParamsInterface {
   isEmptyFieldPresent?: boolean,
   allValidationErrorsText?: string,
   emptyFieldsIndexes?: number[],

@@ -1,7 +1,7 @@
 import { Locator, Page, expect } from "@playwright/test";
 import { MenuBar } from "@common";
 import { BasePage } from "@pages";
-import { CartActionsOptionalParamsInterface, ClientSideValiationErrorOptionalParamsInterface } from "@helpers";
+import { CartActionsOptionalParamsInterface, ClientSideValidationErrorOptionalParamsInterface } from "@helpers";
 import { MenuBarCategories } from "@common";
 import { MenuBarSubCategories } from "@common";
 import { AccountHeaderOptions } from "@common";
@@ -48,7 +48,7 @@ export class LumaMainPage extends BasePage {
   }
 
   /**
-   * @description applies to men and women top and bottom categories becasue they are the only onces with subcategories at the moment
+   * @description applies to men and women top and bottom categories because they are the only onces with subcategories at the moment
    * @param subCategory 
    */
 
@@ -108,7 +108,7 @@ export class LumaMainPage extends BasePage {
           await this.page.waitForTimeout(2500);
         }
       } catch (error) {
-        throw new Error(`pleasae refer to function "performActionsOnShoppingCart" - the condition may not be satisifed `)
+        throw new Error(`an error occurred while performing actions on the shopping cart: ${error}`);
       }
     }
   }
@@ -203,11 +203,11 @@ export class LumaMainPage extends BasePage {
   /**
    * @description this function is meant for negative testing to validate that the client side validation errors are displayed
    * on the relevant corresponding fields.
-   * It handles situiations where fields are empty or when typing invalid data in the fields.
-   * The purpose of this funciton is to return the index of the fields in case they are empty with validation on empty fields
-   * as well as returning the client side validation error text and on what fields it occured.
-   * The function returns an array of the validation error innertext and the index of each error and makes an assertion validation 
-   * on the number of errors that occured, on which field they occoured and their text.
+   * It handles situations where fields are empty or when typing invalid data in the fields.
+   * The purpose of this function is to return the index of the fields in case they are empty with validation on empty fields
+   * as well as returning the client side validation error text and on what fields it occurred.
+   * The function returns an array of the validation error innertText and the index of each error and makes an assertion validation 
+   * on the number of errors that occurred, on which field they occurred and their text.
    * @param expectedCount 
    * @param inputFieldsLocator 
    * @param options 
@@ -215,10 +215,10 @@ export class LumaMainPage extends BasePage {
   public async handleClientSideValidationErrors(
     expectedCount: number,
     inputFieldsLocator: Locator[],
-    options?: ClientSideValiationErrorOptionalParamsInterface
+    options?: ClientSideValidationErrorOptionalParamsInterface
   ) {
-    const cliendSideValidationError = this.page.locator(this.clientSideValidationErrorLocator);
-    const validationErrorsCount = await this.countElements(cliendSideValidationError);
+    const clientSideValidationError = this.page.locator(this.clientSideValidationErrorLocator);
+    const validationErrorsCount = await this.countElements(clientSideValidationError);
     expect(validationErrorsCount).toBe(expectedCount);
     const inputFields = await this.getInputFieldsValues(inputFieldsLocator);
     const emptyFieldIndexes: number[] = [];
@@ -234,11 +234,11 @@ export class LumaMainPage extends BasePage {
     const validationErrorTextList: string[] = []
     const validationErrorIndexes = await this.page.locator(this.fieldWrapperControlLocator).all();
     for (let i = 0; i < validationErrorIndexes.length; i++) {
-      const fieldWrapperInnexText = await this.getInnerText(validationErrorIndexes[i]);
-      const validationErrorFilter = validationErrorIndexes[i].filter({ has: cliendSideValidationError })
+      const fieldWrapperInnerText = await this.getInnerText(validationErrorIndexes[i]);
+      const validationErrorFilter = validationErrorIndexes[i].filter({ has: clientSideValidationError })
       if (await validationErrorFilter.isVisible()) {
         validationErrorNthIndex.push(i);
-        validationErrorTextList.push(fieldWrapperInnexText);
+        validationErrorTextList.push(fieldWrapperInnerText);
       }
     }
     expect(validationErrorNthIndex).toEqual(options?.validationErrorsIndexes);

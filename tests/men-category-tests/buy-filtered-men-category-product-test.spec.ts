@@ -3,7 +3,7 @@ import { SideBarShoppingOptionsEnum } from '@common'
 import { MenuBar } from '@common'
 import { MenuBarCategories } from '@common'
 import { MenuBarSubCategories } from '@common'
-import { Randomizer } from '@helpers'
+import { MockGenerator } from '@helpers'
 import { test } from '@helpers'
 
 test('purchase product from specific category', { tag: ['@MEN_CATEGORY_SHOPPING'] }, async ({ loadApplication, menCategoryPage, checkoutShippingPage, checkoutPaymentPage }) => {
@@ -13,16 +13,16 @@ test('purchase product from specific category', { tag: ['@MEN_CATEGORY_SHOPPING'
   let jacketColor: string = 'Black';
   let filters: string[] = ['Lightweight']
   let cartQuantity: number = 1
-  let email: string = Randomizer.getRandomEmail();
-  let firstname: string = Randomizer.getRandomFirstName();
-  let lastname: string = Randomizer.getRandomLastName()
-  let company: string = Randomizer.getRandomCompanyName();
-  let streetAddress: string = Randomizer.getRandomStreetAddress();
-  let city: string = Randomizer.getRandomCityName();
+  let email: string = MockGenerator.getRandomEmail();
+  let firstname: string = MockGenerator.getRandomFirstName();
+  let lastname: string = MockGenerator.getRandomLastName()
+  let company: string = MockGenerator.getRandomCompanyName();
+  let streetAddress: string = MockGenerator.getRandomStreetAddress();
+  let city: string = MockGenerator.getRandomCityName();
   let state: string = 'Florida'
-  let postalCode: string = Randomizer.getRandomPostalCode();
+  let postalCode: string = MockGenerator.getRandomPostalCode();
   let country: string = 'United States'
-  let phoneNumber: string = Randomizer.getRandomPhoneNumber();
+  let phoneNumber: string = MockGenerator.getRandomPhoneNumber();
   let shippingMethod: string = 'Best Way';
   let purchaseConfirmation: string = 'Thank you for your purchase!';
   let streetFieldIndex: number = 0;
