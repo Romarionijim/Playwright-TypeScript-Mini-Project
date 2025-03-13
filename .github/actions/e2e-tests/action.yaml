@@ -1,0 +1,36 @@
+name: E2E Tests 
+description: Run E2E tests
+
+inputs:
+  test_tags:
+    description: 'Tags to filter tests'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+
+    - name: 📦 Install dependencies
+      shell: bash
+      run: npm ci
+      working-directory: tests
+
+    - name: 📦🌐 Install Playwright dependencies 
+      shell: bash
+      run: npx playwright install --with-deps
+
+    - name: 🎭 Run tests
+      shell: bash
+      run: npx playwright test --grep "${{ inputs.test_tags }}"
+      working-directory: tests
+
+    - name: 📤 Upload Playwright report
+      uses: actions/upload-artifact@v4.3.1
+      if: always()
+      with:
+        name: playwright-report-${{ github.job }}
+        path: playwright-report/
+        retention-days: 14
