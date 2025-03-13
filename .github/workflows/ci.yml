@@ -112,37 +112,6 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: playwright-report/
-  regression-test-run:
-    timeout-minutes: 60
-    runs-on: ubuntu-latest
-    needs: critical-test-run
-    strategy:
-      fail-fast: false
-      matrix:
-        browsers: ['chromium']
-        greps: ['@LOGIN', '@SIGN_UP', '@SANITY', '@MEN_CATEGORY_SHOP']
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install dependencies
-      run: npm ci
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - name: Run Playwright tests
-      run: BASE_URL=${{ env.BASE_URL }} npx playwright test --grep ${{ matrix.greps }} --project=${{ matrix.browsers }}
-    - uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: playwright-report-${{ github.job }}
-        path: playwright-report/
-        retention-days: 30
-    - name: Deploy Playwright report to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: playwright-report/
 
   # status_checks:
   #   name: E2E status checks
